@@ -19,7 +19,11 @@ Movies REST API also has some additional benefits. For example it displays speci
 
 
 ##Getting started:
-To run the application you have firstly to import the project to IntelliJ. After that, you have to run "MoviesInformat", you can do it for example by pressing right button on "MoviesInformant" class and choosing "Run 'MoviesInformant.main()'".
+To run the application you have firstly to import the project to IntelliJ. In next step you have to build the project, you can do it for example by choosing "Build" in menu and later by choosing "Build project".
+
+![Building project.](http://i.imgur.com/i0eE33b.png)
+
+After that, you have to run "MoviesInformat", you can do it for example by pressing right button on "MoviesInformant" class and choosing "Run 'MoviesInformant.main()'".
 
 ![Starting application.](http://i.imgur.com/b3puGCI.png)
 
