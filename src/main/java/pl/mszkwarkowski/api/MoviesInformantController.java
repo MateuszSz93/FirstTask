@@ -80,7 +80,7 @@ public class MoviesInformantController {
      *
      * @param id of the movie.
      * @param title of the movie.
-     * @param releaseData of the movie.
+     * @param releaseDate of the movie.
      * @param time of the movie.
      * @param type of the movie.
      * @param director's name.
@@ -89,7 +89,7 @@ public class MoviesInformantController {
      * @throws Exception if movie with this id is already on the list.
      */
     @PostMapping(value = "/newMovie")
-    public Movie addMovie(@RequestHeader("id") int id, @RequestHeader("title") String title, @RequestHeader("releaseData") String releaseData, @RequestHeader("time") int time, @RequestHeader("type") String type, @RequestHeader("director") String director, @RequestHeader("actors") String actors) throws Exception {
+    public Movie addMovie(@RequestHeader("id") int id, @RequestHeader("title") String title, @RequestHeader("releaseDate") String releaseDate, @RequestHeader("time") int time, @RequestHeader("type") String type, @RequestHeader("director") String director, @RequestHeader("actors") String actors) throws Exception {
 
         if (moviesInformantStorage.getMovie(id) != null) {
             throw new Exception("Movie with this id is already on the list.");
@@ -102,7 +102,7 @@ public class MoviesInformantController {
             throw new Exception("Movie has to have at least one actor. Actor which you tried to add to movie probably does not exists. Please create actor first.");
         }
 
-        Movie movie = new Movie(id, title, releaseData, time, type, director, actorList);
+        Movie movie = new Movie(id, title, releaseDate, time, type, director, actorList);
         moviesInformantStorage.addMovie(movie);
 
         return movie;
@@ -211,7 +211,7 @@ public class MoviesInformantController {
      *
      * @param id of movie.
      * @param title of movie.
-     * @param releaseData of movie.
+     * @param releaseDate of movie.
      * @param time of movie.
      * @param type of movie.
      * @param director of movie.
@@ -220,7 +220,7 @@ public class MoviesInformantController {
      * @throws Exception if movie with id given as parameter does not exists or if actor list is empty.
      */
     @PostMapping(value = "editMovie/{id}")
-    public Movie editMovie(@PathVariable int id, @RequestHeader(value = "title", required = false) String title, @RequestHeader(value = "releaseData", required = false) String releaseData, @RequestHeader(value = "time", required = false) Integer time, @RequestHeader(value = "type", required = false) String type, @RequestHeader(value = "director", required = false) String director, @RequestHeader(value = "actors", required = false) String actors) throws Exception {
+    public Movie editMovie(@PathVariable int id, @RequestHeader(value = "title", required = false) String title, @RequestHeader(value = "releaseDate", required = false) String releaseDate, @RequestHeader(value = "time", required = false) Integer time, @RequestHeader(value = "type", required = false) String type, @RequestHeader(value = "director", required = false) String director, @RequestHeader(value = "actors", required = false) String actors) throws Exception {
         Movie movie = moviesInformantStorage.getMovie(id);
         if (movie == null) {
             throw new Exception("Movie with this id does not exists.");
@@ -234,7 +234,7 @@ public class MoviesInformantController {
             }
             actorList = moviesInformantStorage.addActorToActorList(id, listOfActorsId);
         }
-        moviesInformantStorage.editMovie(id, title, releaseData, time, type, director, actorList);
+        moviesInformantStorage.editMovie(id, title, releaseDate, time, type, director, actorList);
         return movie;
     }
 }

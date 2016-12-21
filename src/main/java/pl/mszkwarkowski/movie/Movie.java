@@ -8,7 +8,7 @@ import java.util.List;
 public class Movie {
     private int id;
     private String title;
-    private String releaseData;
+    private String releaseDate;
     private int time;
     private String type;
     private String director;
@@ -16,10 +16,10 @@ public class Movie {
 
     public Movie(){}
 
-    public Movie(int id, String title, String releaseData, int time, String type, String director, List<Actor> actorList){
+    public Movie(int id, String title, String releaseDate, int time, String type, String director, List<Actor> actorList){
         this.id = id;
         this.title = title;
-        this.releaseData = releaseData;
+        this.releaseDate = releaseDate;
         this.time = time;
         this.type = type;
         this.director = director;
@@ -50,12 +50,12 @@ public class Movie {
         this.title = title;
     }
 
-    public String getReleaseData() {
-        return releaseData;
+    public String getReleaseDate() {
+        return releaseDate;
     }
 
-    public void setReleaseData(String releaseData) {
-        this.releaseData = releaseData;
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
     public int getTime() {

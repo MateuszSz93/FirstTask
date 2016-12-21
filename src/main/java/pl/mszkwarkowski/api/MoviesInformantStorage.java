@@ -158,19 +158,19 @@ public class MoviesInformantStorage {
      *
      * @param movieId Id of movie.
      * @param title of movie.
-     * @param releaseData of movie.
+     * @param releaseDate of movie.
      * @param time of movie.
      * @param type of movie.
      * @param director of movie.
      * @param actorList List of actor's id.
      */
-    public void editMovie(int movieId, String title, String releaseData, Integer time, String type, String director, List<Actor> actorList) {
+    public void editMovie(int movieId, String title, String releaseDate, Integer time, String type, String director, List<Actor> actorList) {
         Movie movie = MOVIES.get(movieId);
         if (title != null) {
             movie.setTitle(title);
         }
-        if (releaseData != null) {
-            movie.setReleaseData(title);
+        if (releaseDate != null) {
+            movie.setReleaseDate(title);
         }
         if (time != null) {
             movie.setTime(time);

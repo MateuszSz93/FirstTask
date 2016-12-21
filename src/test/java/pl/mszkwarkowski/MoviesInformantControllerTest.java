@@ -66,7 +66,7 @@ public class MoviesInformantControllerTest {
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].title").value("Kiler"))
-                .andExpect(jsonPath("$[0].releaseData").value("17-10-1997"))
+                .andExpect(jsonPath("$[0].releaseDate").value("17-10-1997"))
                 .andExpect(jsonPath("$[0].time").value(104))
                 .andExpect(jsonPath("$[0].type").value("Comedy"))
                 .andExpect(jsonPath("$[0].director").value("Juliusz Machulski"))
@@ -74,7 +74,7 @@ public class MoviesInformantControllerTest {
                 .andExpect(jsonPath("[0].actorList[*].name", Matchers.containsInAnyOrder("Cezary Pazura", "Małgorzata Kożuchowska", "Jerzy Stuhr", "Janusz Rewiński")))
                 .andExpect(jsonPath("$[1].id").value(2))
                 .andExpect(jsonPath("$[1].title").value("Poranek kojota"))
-                .andExpect(jsonPath("$[1].releaseData").value("24-08-2001"))
+                .andExpect(jsonPath("$[1].releaseDate").value("24-08-2001"))
                 .andExpect(jsonPath("$[1].time").value(92))
                 .andExpect(jsonPath("$[1].type").value("Comedy"))
                 .andExpect(jsonPath("$[1].director").value("Olaf Lubaszenko"))
@@ -111,7 +111,7 @@ public class MoviesInformantControllerTest {
 
     @Test
     public void addMovieTest() throws Exception{
-        mockMvc.perform(post("/newMovie").accept(MediaType.APPLICATION_JSON).header("id", 3).header("title", "Some Title").header("releaseData", "18-12-2016").header("time", 100).header("type", "Action").header("director", "Some Director").header("actors", "1, 2, 8, 9"))
+        mockMvc.perform(post("/newMovie").accept(MediaType.APPLICATION_JSON).header("id", 3).header("title", "Some Title").header("releaseDate", "18-12-2016").header("time", 100).header("type", "Action").header("director", "Some Director").header("actors", "1, 2, 8, 9"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.id").value(3))
@@ -122,7 +122,7 @@ public class MoviesInformantControllerTest {
 
     @Test
     public void actorDataTest() throws Exception {
-        MvcResult result = mockMvc.perform(get("/actor/{id}", 1).accept(MediaType.APPLICATION_JSON).header("id", 3).header("title", "Some Title").header("releaseData", "18-12-2016").header("time", 100).header("type", "Action").header("director", "Some Director").header("actors", "1, 2, 8, 9"))
+        MvcResult result = mockMvc.perform(get("/actor/{id}", 1).accept(MediaType.APPLICATION_JSON).header("id", 3).header("title", "Some Title").header("releaseDate", "18-12-2016").header("time", 100).header("type", "Action").header("director", "Some Director").header("actors", "1, 2, 8, 9"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.id").value(1))
@@ -135,7 +135,7 @@ public class MoviesInformantControllerTest {
 
     @Test
     public void movieDataTest() throws Exception {
-        mockMvc.perform(get("/movie/{id}", 2).accept(MediaType.APPLICATION_JSON).header("id", 3).header("title", "Some Title").header("releaseData", "18-12-2016").header("time", 100).header("type", "Action").header("director", "Some Director").header("actors", "1, 2, 8, 9"))
+        mockMvc.perform(get("/movie/{id}", 2).accept(MediaType.APPLICATION_JSON).header("id", 3).header("title", "Some Title").header("releaseDate", "18-12-2016").header("time", 100).header("type", "Action").header("director", "Some Director").header("actors", "1, 2, 8, 9"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.id").value(2))
@@ -181,7 +181,7 @@ public class MoviesInformantControllerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        Assert.assertEquals("[{\"id\":1,\"title\":\"Kiler\",\"releaseData\":\"17-10-1997\",\"time\":104,\"type\":\"Comedy\",\"director\":\"Juliusz Machulski\",\"actorList\":[{\"id\":1,\"name\":\"Cezary Pazura\"},{\"id\":2,\"name\":\"Małgorzata Kożuchowska\"},{\"id\":3,\"name\":\"Jerzy Stuhr\"},{\"id\":4,\"name\":\"Janusz Rewiński\"}]}]", content);
+        Assert.assertEquals("[{\"id\":1,\"title\":\"Kiler\",\"releaseDate\":\"17-10-1997\",\"time\":104,\"type\":\"Comedy\",\"director\":\"Juliusz Machulski\",\"actorList\":[{\"id\":1,\"name\":\"Cezary Pazura\"},{\"id\":2,\"name\":\"Małgorzata Kożuchowska\"},{\"id\":3,\"name\":\"Jerzy Stuhr\"},{\"id\":4,\"name\":\"Janusz Rewiński\"}]}]", content);
     }
 
     @Test
@@ -209,6 +209,6 @@ public class MoviesInformantControllerTest {
                 .andReturn();;
 
         String content = result.getResponse().getContentAsString();
-        Assert.assertEquals("{\"id\":1,\"title\":\"Some New Title\",\"releaseData\":\"17-10-1997\",\"time\":321,\"type\":\"Comedy\",\"director\":\"Juliusz Machulski\",\"actorList\":[{\"id\":1,\"name\":\"Cezary Pazura\"},{\"id\":5,\"name\":\"Maciej Stuhr\"},{\"id\":8,\"name\":\"Edward Linde-Lubaszenko\"}]}", content);
+        Assert.assertEquals("{\"id\":1,\"title\":\"Some New Title\",\"releaseDate\":\"17-10-1997\",\"time\":321,\"type\":\"Comedy\",\"director\":\"Juliusz Machulski\",\"actorList\":[{\"id\":1,\"name\":\"Cezary Pazura\"},{\"id\":5,\"name\":\"Maciej Stuhr\"},{\"id\":8,\"name\":\"Edward Linde-Lubaszenko\"}]}", content);
     }
 }
