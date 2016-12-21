@@ -46,7 +46,7 @@ And to display movies lists, you need to use this URL:
 
 In both cases, you have to choose "GET" as your HTTP method. Result will be returned in JSON format. If some of lists is empty, you will get relevant information.
 
-![Movies list.](http://i.imgur.com/TohHLJm.png)
+![Movies list.](http://i.imgur.com/JaVa0LG.png)
 
 ###Display actor/movie:
 To display simple actor you have to use this adress: 
@@ -97,7 +97,7 @@ In both cases, you have to choose "POST" as your HTTP method. After creating new
 
 ![New actor.](http://i.imgur.com/rrPPgjd.png)
 
-![New movie.](http://i.imgur.com/0DtQ8dq.png)
+![New movie.](http://i.imgur.com/grjQIVl.png)
 
 ###Edit actor/movie:
 To edit actor you have to use this adress:
@@ -123,7 +123,7 @@ As id you have to write id of the movie. You have to pass new informations about
 
 In both cases, you have to choose "POST" as your HTTP method. During editing actor/movie, all headers are optional so you can for example only change name of the movie. After editing actor/movie you will get informations about new version of your object in JSON format. If actor/movie with this id does not exist, you will get relevant information.
 
-![Edit movie.](http://i.imgur.com/aYdRq9Z.png)
+![Edit movie.](http://i.imgur.com/omsu7Tu.png)
 
 ###Remove actor/movie:
 To remove actor you have to use this adress:
