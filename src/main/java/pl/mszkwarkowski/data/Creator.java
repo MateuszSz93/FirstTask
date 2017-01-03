@@ -15,7 +15,7 @@ public class Creator {
     /**
      * This method create actors/movies and add them to the collections.
      */
-    public void startingObjectsCreator(){
+    public void startingObjectsCreator() {
         MoviesInformantStorage moviesInformantStorage = new MoviesInformantStorage();
         Actor actor = new Actor(1, "Cezary Pazura");
         Actor actor1 = new Actor(2, "Małgorzata Kożuchowska");

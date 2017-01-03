@@ -98,22 +98,22 @@ public class MoviesInformantControllerTest {
 
     @Test
     public void addActorTest() throws Exception {
-        MvcResult result = mockMvc.perform(post("/newActor").accept(MediaType.APPLICATION_JSON).header("id", 9).header("name", "Tadeusz Huk"))
+        MvcResult result = mockMvc.perform(post("/newActor").contentType(MediaType.APPLICATION_JSON).content("{\"id\":9,\"name\":\"Tadeusz Huk\"}"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.id").value(9))
                 .andExpect(jsonPath("$.name").value("Tadeusz Huk"))
-                .andReturn();;
+                .andReturn();
+        ;
 
         String content = result.getResponse().getContentAsString();
         Assert.assertEquals("{\"id\":9,\"name\":\"Tadeusz Huk\"}", content);
     }
 
     @Test
-    public void addMovieTest() throws Exception{
-        mockMvc.perform(post("/newMovie").accept(MediaType.APPLICATION_JSON).header("id", 3).header("title", "Some Title").header("releaseDate", "18-12-2016").header("time", 100).header("type", "Action").header("director", "Some Director").header("actors", "1, 2, 8, 9"))
+    public void addMovieTest() throws Exception {
+        mockMvc.perform(post("/newMovie").contentType(MediaType.APPLICATION_JSON).content("{\"id\":3,\"title\":\"Some Title\",\"releaseDate\":\"18-12-2016\",\"time\":100,\"type\":\"Action\",\"director\":\"Some Director\",\"actorList\":[{\"id\":1,\"name\":\"Cezary Pazura\"},{\"id\":2,\"name\":\"Małgorzata Kożuchowska\"},{\"id\":8,\"name\":\"Edward Linde-Lubaszenko\"},{\"id\":9,\"name\":\"Tadeusz Huk\"}]}"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.id").value(3))
                 .andExpect(jsonPath("actorList[*].name", Matchers.containsInAnyOrder("Tadeusz Huk", "Cezary Pazura", "Małgorzata Kożuchowska", "Edward Linde-Lubaszenko")))
                 .andExpect(jsonPath("$.title").value("Some Title"))
@@ -127,7 +127,8 @@ public class MoviesInformantControllerTest {
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("Cezary Pazura"))
-                .andReturn();;
+                .andReturn();
+        ;
 
         String content = result.getResponse().getContentAsString();
         Assert.assertEquals("{\"id\":1,\"name\":\"Cezary Pazura\"}", content);
@@ -145,7 +146,7 @@ public class MoviesInformantControllerTest {
     }
 
     @Test
-    public void deleteActorTest() throws Exception{
+    public void deleteActorTest() throws Exception {
         mockMvc.perform(delete("/deleteActor/{id}", 7).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -172,7 +173,7 @@ public class MoviesInformantControllerTest {
                 .andExpect(jsonPath("$[*].id", Matchers.containsInAnyOrder(1, 3)))
                 .andExpect(jsonPath("$.*", hasSize(2)));
 
-       MvcResult result = mockMvc.perform(delete("/deleteMovie/{id}", 3).accept(MediaType.APPLICATION_JSON))
+        MvcResult result = mockMvc.perform(delete("/deleteMovie/{id}", 3).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$[*].title", Matchers.containsInAnyOrder("Kiler")))
@@ -185,28 +186,28 @@ public class MoviesInformantControllerTest {
     }
 
     @Test
-    public void editActorTest() throws Exception{
-        MvcResult result = mockMvc.perform(post("/editActor/{id}", 1).accept(MediaType.APPLICATION_JSON).header("name", "Jason Statham"))
+    public void editActorTest() throws Exception {
+        MvcResult result = mockMvc.perform(put("/editActor/{id}", 1).contentType(MediaType.APPLICATION_JSON).content("{\"id\":1,\"name\":\"Jason Statham\"}"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("Jason Statham"))
-                .andReturn();;
+                .andReturn();
+        ;
 
         String content = result.getResponse().getContentAsString();
         Assert.assertEquals("{\"id\":1,\"name\":\"Jason Statham\"}", content);
     }
 
     @Test
-    public void editMovieTest() throws Exception{
-        MvcResult result = mockMvc.perform(post("/editMovie/{id}", 1).accept(MediaType.APPLICATION_JSON).header("title", "Some New Title").header("time", 321).header("actors", "1, 5, 8"))
+    public void editMovieTest() throws Exception {
+        MvcResult result = mockMvc.perform(put("/editMovie/{id}", 1).contentType(MediaType.APPLICATION_JSON).content("{\"id\":1,\"title\":\"Some New Title\",\"releaseDate\":\"17-10-1997\",\"time\":321,\"type\":\"Comedy\",\"director\":\"Juliusz Machulski\",\"actorList\":[{\"id\":1,\"name\":\"Cezary Pazura\"},{\"id\":5,\"name\":\"Maciej Stuhr\"},{\"id\":8,\"name\":\"Edward Linde-Lubaszenko\"}]}"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("actorList[*].name", Matchers.containsInAnyOrder("Cezary Pazura", "Maciej Stuhr", "Edward Linde-Lubaszenko")))
                 .andExpect(jsonPath("$.title").value("Some New Title"))
                 .andExpect(jsonPath("$.time").value(321))
-                .andReturn();;
+                .andReturn();
+        ;
 
         String content = result.getResponse().getContentAsString();
         Assert.assertEquals("{\"id\":1,\"title\":\"Some New Title\",\"releaseDate\":\"17-10-1997\",\"time\":321,\"type\":\"Comedy\",\"director\":\"Juliusz Machulski\",\"actorList\":[{\"id\":1,\"name\":\"Cezary Pazura\"},{\"id\":5,\"name\":\"Maciej Stuhr\"},{\"id\":8,\"name\":\"Edward Linde-Lubaszenko\"}]}", content);

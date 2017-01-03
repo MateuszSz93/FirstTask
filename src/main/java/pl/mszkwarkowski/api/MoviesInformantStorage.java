@@ -1,5 +1,6 @@
 package pl.mszkwarkowski.api;
 
+import org.springframework.beans.BeanUtils;
 import pl.mszkwarkowski.movie.Actor;
 import pl.mszkwarkowski.movie.Movie;
 
@@ -23,8 +24,6 @@ public class MoviesInformantStorage {
     private static final Map<Integer, List<Integer>> MOVIES_OF_ACTOR = new HashMap<>();
 
     /**
-     * This method returns all Movie's object which are in MOVIES.
-     *
      * @return collection of Movie's objects.
      */
     public Collection<Movie> getMovies() {
@@ -32,8 +31,6 @@ public class MoviesInformantStorage {
     }
 
     /**
-     * This method returns Movie object which has given id.
-     *
      * @param movieId Id of the movie.
      * @return Movie object.
      */
@@ -42,17 +39,11 @@ public class MoviesInformantStorage {
     }
 
     /**
-     * This method adds new object to MOVIES.
-     *
      * @param movie Movie object.
      */
-    public void addMovie(Movie movie) {
-        MOVIES.put(movie.getId(), movie);
-    }
+    public void addMovie(Movie movie) { MOVIES.put(movie.getId(), movie); }
 
     /**
-     * This method returns all Actor's object which are in ACTORS.
-     *
      * @return collection of Actor's object.
      */
     public Collection<Actor> getActors() {
@@ -60,8 +51,6 @@ public class MoviesInformantStorage {
     }
 
     /**
-     * This method returns Actor object which has given id.
-     *
      * @param actorId Id of the actor.
      * @return Actor object.
      */
@@ -70,13 +59,9 @@ public class MoviesInformantStorage {
     }
 
     /**
-     * This method adds new object to ACTORS.
-     *
      * @param actor
      */
-    public void addActor(Actor actor) {
-        ACTORS.put(actor.getId(), actor);
-    }
+    public void addActor(Actor actor) { ACTORS.put(actor.getId(), actor); }
 
     /**
      * This method removes the actor from ACTORS and MOVIES_OF_ACTOR. It also delete the actor from all movies where he was playing.
@@ -95,7 +80,6 @@ public class MoviesInformantStorage {
                 movie.setActorList(actorList);
             }
         }
-
         MOVIES_OF_ACTOR.remove(id);
         ACTORS.remove(id);
     }
@@ -116,7 +100,6 @@ public class MoviesInformantStorage {
                 MOVIES_OF_ACTOR.put(actor.getId(), moviesList);
             }
         }
-
         MOVIES.remove(id);
     }
 
@@ -141,81 +124,57 @@ public class MoviesInformantStorage {
     }
 
     /**
-     * This method edits values in Actor object which has given id.
+     * This method copies values from "Actor" object given as parameter to "Actor" object on the list, which has the same id like in parameter.
      *
-     * @param actorId Id of actor.
-     * @param name of actor.
+     * @param id    of the actor.
+     * @param actor is Actor object which has new data for Actor object which already exists on the list.
      */
-    public void editActor(int actorId, String name) {
-        Actor actor = ACTORS.get(actorId);
-        if (name != null) {
-            actor.setName(name);
-        }
+    public void editActor(int id, Actor actor) {
+        BeanUtils.copyProperties(actor, ACTORS.get(id));
     }
 
     /**
-     * This method edits values in Movie object which has given id.
+     * This method copies values from "Movie" object given as parameter to "Movie" object on the list, which has the same id like in parameter.
      *
-     * @param movieId Id of movie.
-     * @param title of movie.
-     * @param releaseDate of movie.
-     * @param time of movie.
-     * @param type of movie.
-     * @param director of movie.
-     * @param actorList List of actor's id.
+     * @param id    of the movie
+     * @param movie is Movie object which has new data for Movie object which already exists on the list.
      */
-    public void editMovie(int movieId, String title, String releaseDate, Integer time, String type, String director, List<Actor> actorList) {
-        Movie movie = MOVIES.get(movieId);
-        if (title != null) {
-            movie.setTitle(title);
-        }
-        if (releaseDate != null) {
-            movie.setReleaseDate(title);
-        }
-        if (time != null) {
-            movie.setTime(time);
-        }
-        if (type != null) {
-            movie.setType(type);
-        }
-        if (director != null) {
-            movie.setDirector(director);
-        }
-        if (actorList != null) {
-            List<Actor> currentActors = movie.getActorList();
-            for (Actor actor : currentActors) {
-                if (!actorList.contains(actor)) {
-                    List<Integer> moviesOfActorList = MOVIES_OF_ACTOR.get(actor.getId());
-                    moviesOfActorList.remove(Integer.valueOf(movieId));
-                    MOVIES_OF_ACTOR.put(actor.getId(), moviesOfActorList);
-                }
+    public void editMovie(int id, Movie movie) {
+        List<Actor> currentActors = MOVIES.get(id).getActorList();
+        for (Actor actor : currentActors) {
+            if (!movie.getActorList().contains(actor)) {
+                List<Integer> moviesOfActorList = MOVIES_OF_ACTOR.get(actor.getId());
+                moviesOfActorList.remove(Integer.valueOf(id));
+                MOVIES_OF_ACTOR.put(actor.getId(), moviesOfActorList);
             }
-            for (Actor actor : actorList) {
-                if (!currentActors.contains(actor)) {
-                    addMovieToActor(actor.getId(), movieId);
-                }
-            }
-            movie.setActorList(actorList);
         }
+        for (Actor actor : movie.getActorList()) {
+            if (!currentActors.contains(actor)) {
+                addMovieToActor(actor.getId(), id);
+            }
+        }
+        movie.setActorList(movie.getActorList());
+        BeanUtils.copyProperties(movie, MOVIES.get(id));
     }
 
     /**
-     * This method creates list of Actor objects for each movie. This get list of String and later find the Actor object for each id given in string.
+     * This method takes this list of Actors which play in the movie. For each "Actor" object it checks if "Actor" with this id already exists. If not, it add him to Actors List. After that, it checks if given Actor object has the same name like Actor object about the same id on the list. If yes, it adds movie id and actor id to MOVIES_OF_ACTOR map.
      *
-     * @param id of movie.
-     * @param listOfActorsId String which contains ids of actors.
-     * @return
+     * @param actorList
+     * @param movieId
+     * @return actorList List of actors id which play in the movie whose id is given as parameter.
      */
-    public List<Actor> addActorToActorList(int id, List<String> listOfActorsId) {
-        List<Actor> actorList = new ArrayList<Actor>();
-        for (String actorId : listOfActorsId) {
-            MoviesInformantStorage moviesInformantStorage = new MoviesInformantStorage();
-            Actor actor = moviesInformantStorage.getActor(Integer.parseInt(actorId));
-            if (actor != null && !actorList.contains(actor)) {
-                actorList.add(actor);
-                moviesInformantStorage.addMovieToActor(actor.getId(), id);
+    public List<Actor> addActorToActorsList(List<Actor> actorList, int movieId) {
+        List<Actor> actorsWithUniqueId = new ArrayList<>();
+        for (Actor actor : actorList) {
+            if (!ACTORS.containsKey(actor.getId())) {
+                addActor(actor);
+            }
+            if (ACTORS.get(actor.getId()).getName().equals(actor.getName())) {
+                addMovieToActor(actor.getId(), movieId);
+                actorsWithUniqueId.add(actor);
             }
         }
-        return actorList;
+        return actorsWithUniqueId;
     }
 }
