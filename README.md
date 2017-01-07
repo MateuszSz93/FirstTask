@@ -53,7 +53,7 @@ Use example with result:
     curl http://localhost:8080/actors
     [{"id":1,"name":"Cezary Pazura"},{"id":2,"name":"Malgorzata Kozuchowska"},{"id":3,"name":"Jerzy Stuhr"},...]
 
-###Display actor/movie:
+###Display actor or movie:
 To display simple actor you have to use this adress: 
 
 > http://localhost:8080/actor/{id} 
@@ -72,13 +72,20 @@ And the same for movie. If you want to get informations about movie with id numb
 
 In both cases, you have to choose "GET" as your HTTP method. Informations about actor/movie will be returned in JSON format. 
 
+Use example with result for actor:
+
+	curl http://localhost:8080/actor/13
+	{"id":13,"name":"Marlon Brando"}
+
+Use example with result for movie:
+
 	curl http://localhost:8080/movie/1
 	{"id":1,"title":"Kiler","releaseDate":"17-10-1997","time":104,"type":"Comedy","director":"Juliusz Machulski","actorList":[{"id":1,"name":"Cezary Pazura"},{"id":2,"name":"Malgorzata Kozuchowska"},{"id":3,"name":"Jerzy Stuhr"},{"id":4,"name":"Janusz Rewinski"}],"available":true,"category":"HIT"}
 
 Remember, that if you are using terminal, you have to write this code to get unicode characters:
 > chcp 65001
 
-###Create actor/movie:
+###Create actor or movie:
 To create actor you have to use this adress:
 
 > http://localhost:8080/newActor
@@ -95,7 +102,6 @@ To create movie you have to use this adress:
 > http://localhost:8080/newMovie
 
 As in the case of an actor, during creating new movie you have to pass informations about movie by using JSON code. Your JSON code should look like this:
-
 
 	{
 	  "id": ...,
@@ -122,21 +128,19 @@ Use example with result for actor:
 
 Use example with result for movie:
 
-	curl -H "Content-Type: application/json" -X POST -d "{\"id\": 31,\"title\": \"Some Title\",\"releaseDate\": \"06-01-2017\",\"time\": 122,\"typ
-	e\": \"Comedy\",\"director\": \"Some Director\",\"actorList\": [{\"id\": 70,\"name\": \"Some Actor\"}],\"category\": \"OTHER\"}" http://localhost:8080/newMovie
-	{"id":31,"title":"Some Title","releaseDate":"06-01-2017","time":122,"type":"Comedy","director":"Some Director","actorList":[{"id":70,"name":"Some Actor"}],"available":true,"category"
-	:"OTHER"}
+	curl -H "Content-Type: application/json" -X POST -d "{\"id\": 31,\"title\": \"Some Title\",\"releaseDate\": \"06-01-2017\",\"time\": 122,\"type\": \"Comedy\",\"director\": \"Some Director\",\"actorList\": [{\"id\": 70,\"name\": \"Some Actor\"}],\"category\": \"OTHER\"}" http://localhost:8080/newMovie
+	{"id":31,"title":"Some Title","releaseDate":"06-01-2017","time":122,"type":"Comedy","director":"Some Director","actorList":[{"id":70,"name":"Some Actor"}],"available":true,"category":"OTHER"}
 
-###Edit actor/movie:
+###Edit actor or movie:
 To edit actor you have to use this adress:
 
 > http://localhost:8080/editActor/{id}
 
-As id you have to write id of the actor. New informations about the actor you have to pass by using JSON code the same like during creating new Actor [Create-actor/movie](#Create-actor/movie). To edit movie you have to use this adress:
+As id you have to write id of the actor. New informations about the actor you have to pass by using JSON code the same like during creating new Actor [Create actor or movie](#create-actor-or-movie). To edit movie you have to use this adress:
 
 > http://localhost:8080/editMovie/{id}
 
-As id you have to write id of the movie. You have to pass new informations about movie by using JSON code the same like during creating new Movie [Create-actor/movie](#Create-actor/movie). In both cases, you have to choose "PUT" as your HTTP method. After editing actor/movie you will get informations about new version of your object in JSON format.
+As id you have to write id of the movie. You have to pass new informations about movie by using JSON code the same like during creating new Movie [Create actor or movie](#create-actor-or-movie). In both cases, you have to choose "PUT" as your HTTP method. You have to remember that you have to choose "application json" as "content type". After editing actor/movie you will get informations about new version of your object in JSON format.
 
 Use example with result for actor:
 
@@ -145,12 +149,10 @@ Use example with result for actor:
 
 Use example with result for movie:
 
-	curl -H "Content-Type: application/json" -X PUT -d "{\"id\": 31,\"title\": \"Some Edited Title\",\"releaseDate\": \"06-01-2017\",\"time\": 95,
-	\"type\": \"Action\",\"director\": \"Some Director\",\"actorList\": [{\"id\": 70,\"name\": \"Some Edited Actor\"}],\"category\": \"HIT\"}" http://localhost:8080/editMovie/31
-	{"id":31,"title":"Some Edited Title","releaseDate":"06-01-2017","time":95,"type":"Action","director":"Some Director","actorList":[{"id":70,"name":"Some Edited Actor"}],"available":tr
-	ue,"category":"HIT"}
+	curl -H "Content-Type: application/json" -X PUT -d "{\"id\": 31,\"title\": \"Some Edited Title\",\"releaseDate\": \"06-01-2017\",\"time\": 95,\"type\": \"Action\",\"director\": \"Some Director\",\"actorList\": [{\"id\": 70,\"name\": \"Some Edited Actor\"}],\"category\": \"HIT\"}"  http://localhost:8080/editMovie/31
+	{"id":31,"title":"Some Edited Title","releaseDate":"06-01-2017","time":95,"type":"Action","director":"Some Director","actorList":[{"id":70,"name":"Some Edited Actor"}],"available":true,"category":"HIT"}
 
-###Remove actor/movie:
+###Remove actor or movie:
 To remove actor you have to use this adress:
 
 > http://localhost:8080/deleteActor/{id}
@@ -170,12 +172,58 @@ Use example with result for movie:
 
 	curl -X DELETE http://localhost:8080/deleteMovie/2
 	[{"id":1,"title":"Kiler","releaseDate":"17-10-1997","time":104,"type":"Comedy","director":"Juliusz Machulski","actorList":[{"id":1,"name":"Cezary Pazura"},{"id":3,"name":"Jerzy Stuhr"},{"id":4,"name":"Janusz Rewinski"}],"available":true,"category":"HIT"},{"id":3,"title":"Chlopaki nie placza", ...}, ...]
+	
+###Create user:
+To create user you have to use this adress:
 
+> http://localhost:8080/newUser
 
+Informations about user you have to pass by using JSON code. Your JSON code should look like this:
 
+	{
+      "id": ...,
+      "name": "..."
+    }
 
+You have to choose "POST" as your HTTP method. After creating new user, he will be added to list of users and you will get informations about your creation in JSON format. If user with id which your try to use, already exists, null will be returned. 
 
+Use example with result:
 
+	curl -H "Content-Type: application/json" -X POST -d "{\"id\":2,\"name\":\"New User\"}" http://localhost:8080/newUser
+	{"id":2,"name":"New User","debt":0}
 
+###Get user movies:
+To get list of movies rented by user you have to use this adress:
 
+> http://localhost:8080/userMovies/{id}
 
+As id you have to write id of user. You have to choose "GET" as your HTTP method. After that, you will get information about all movies rented by user in JSON format.
+
+Use example with result:
+
+	curl http://localhost:8080/userMovies/1
+	[{"id":8,"title":"The Departed","releaseDate":"26-09-2006","time":152,"type":"Criminal","director":"Martin Scorsese","actorList":[{"id":20,"name":"Leonardo DiCaprio"},{"id":21,"name":"Matt Damon"},{"id":22,"name":"Jack Nicholson"},{"id":23,"name":"Mark Wahlberg"}],"available":false,"category":"HIT"},{"id":13,"title":"Once Upon a Time in America","releaseDate":"17-02-1984","time":229,"type":"Drama","director":"Sergio Leone","actorList":[{"id":32,"name":"James Wood"},{"id":17,"name":"Robert De Niro"},{"id":19,"name":"Joe Pesci"}],"available":false,"category":"OTHER"},{"id":24,"title":"Doctor Strange","releaseDate":"20-10-2016","time":115,"type":"Action","director":"Scott Derrickson","actorList":[{"id":53,"name":"Benedict Cumberbatch"},{"id":54,"name":"Rachel McAdams"}],"available":false,"category":"NEW"}]
+
+###Rent movies:
+To rent movies by user you have to use this adress:
+
+> http://localhost:8080/rentMovies/{userId}/{moviesId}
+
+As "userId" you have to write id of user. As "moviesId" you have to write movies id, separated by commas. You have to choose "PUT" as your HTTP method. After that, you will get information about just rented movies in JSON format.
+
+Use example with result:
+
+	curl -X PUT http://localhost:8080/rentMovies/1/3,25
+	[{"id":3,"title":"Chlopaki nie placza","releaseDate":"25-02-2000","time":96,"type":"Comedy","director":"Olaf Lubaszenko","actorList":[{"id":5,"name":"Maciej Stuhr"},{"id":7,"name":"Michal Milowicz"},{"id":1,"name":"Cezary Pazura"}],"available":false,"category":"HIT"},{"id":25,"title":"The Accountant","releaseDate":"06-10-2016","time":128,"type":"Drama","director":"Gavin O'Connor","actorList":[{"id":55,"name":"Anna Kendrick"},{"id":56,"name":"Ben Affleck"}],"available":false,"category":"NEW"}]
+
+###Return movies:
+To return movies by user yo have to use this adress:
+
+> http://localhost:8080/returnMovies/{userId}/{moviesId}
+
+As "userId" you have to write id of user. As "moviesId" you have to write movies id, separated by commas. You have to choose "DELETE" as your HTTP method. After that, you will get information about movies, whose still are rented by user, in JSON format.
+
+Use example with result:
+
+	curl -X DELETE http://localhost:8080/returnMovies/1/3,8,13
+	[{"id":24,"title":"Doctor Strange","releaseDate":"20-10-2016","time":115,"type":"Action","director":"Scott Derrickson","actorList":[{"id":53,"name":"Benedict Cumberbatch"},{"id":54,"name":"Rachel McAdams"}],"available":false,"category":"NEW"},{"id":25,"title":"The Accountant","releaseDate":"06-10-2016","time":128,"type":"Drama","director":"Gavin O'Connor","actorList":[{"id":55,"name":"Anna Kendrick"},{"id":56,"name":"Ben Affleck"}],"available":false,"category":"NEW"}]
