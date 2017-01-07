@@ -14,9 +14,7 @@ Movies REST API also has some additional benefits. For example it displays speci
 
  - Java JDK 8
  - IntelliJ IDEA Community
- - Any tool to send HTTP requests, for example: [HttpRequester](https://addons.mozilla.org/pl/firefox/addon/httprequester/) for
-   Firefox, [Postman](https://chrome.google.com/webstore/detail/postman-rest-client/fhbjgbiflinjbdggehcddcbncdddomop) for Chrome
-
+ - [curl](https://curl.haxx.se/)
 
 ##Getting started:
 To run the application you have firstly to import the project to IntelliJ. In next step you have to build the project, you can do it for example by choosing "Build" in menu and later by choosing "Build project".
@@ -27,13 +25,17 @@ After that, you have to run "MoviesInformat", you can do it for example by press
 
 ![Starting application.](http://i.imgur.com/b3puGCI.png)
 
-After that, you can use your tool to display simple welcome message. In your tool you need to write this URL: 
+After that, you can use curl to display simple welcome message. You need to use this URL: 
 
 > http://localhost:8080/
 
-And you have to choose "GET" as your HTTP method. If all went good, you should see welcome message.
+You have to choose "GET" as your HTTP method. This is how your code should look and the result:
 
-![Welcome message.](http://i.imgur.com/w1NBe9P.png)
+> curl http://localhost:8080/
+
+If all went good, you should see welcome message.
+
+    Welcome in Movies REST API!
 
 ###Display actors/movies list:
 To display actors list you have to write this adress: 
@@ -44,9 +46,12 @@ And to display movies lists, you need to use this URL:
 
 > http://localhost:8080/movies
 
-In both cases, you have to choose "GET" as your HTTP method. Result will be returned in JSON format. If some of lists is empty, you will get relevant information.
+In both cases, you have to choose "GET" as your HTTP method. Result will be returned in JSON format. 
 
-![Movies list.](http://i.imgur.com/JaVa0LG.png)
+Use example with result:
+
+    curl http://localhost:8080/actors
+    [{"id":1,"name":"Cezary Pazura"},{"id":2,"name":"Malgorzata Kozuchowska"},{"id":3,"name":"Jerzy Stuhr"},...]
 
 ###Display actor/movie:
 To display simple actor you have to use this adress: 
@@ -65,65 +70,85 @@ And the same for movie. If you want to get informations about movie with id numb
 
 > http://localhost:8080/movie/1
 
-In both cases, you have to choose "GET" as your HTTP method. Informations about actor/movie will be returned in JSON format. If actor/movie with this id does not exist, you will get relevant information.
+In both cases, you have to choose "GET" as your HTTP method. Informations about actor/movie will be returned in JSON format. 
 
-![Simple actor.](http://i.imgur.com/W0NXeGI.png)
+	curl http://localhost:8080/movie/1
+	{"id":1,"title":"Kiler","releaseDate":"17-10-1997","time":104,"type":"Comedy","director":"Juliusz Machulski","actorList":[{"id":1,"name":"Cezary Pazura"},{"id":2,"name":"Malgorzata Kozuchowska"},{"id":3,"name":"Jerzy Stuhr"},{"id":4,"name":"Janusz Rewinski"}],"available":true,"category":"HIT"}
+
+Remember, that if you are using terminal, you have to write this code to get unicode characters:
+> chcp 65001
 
 ###Create actor/movie:
 To create actor you have to use this adress:
 
 > http://localhost:8080/newActor
 
-Informations about actor you have to pass by using headers with following keys:
+Informations about actor you have to pass by using JSON code. Your JSON code should look like this:
 
-- id - id of the actor,
-- name - full name of the actor.
+	{
+      "id": ...,
+      "name": "..."
+    }
 
 To create movie you have to use this adress:
 
 > http://localhost:8080/newMovie
 
-As in the case of an actor, during creating new movie you have to pass informations about movie by using headers. Now you have to use the following keys in headers: 
+As in the case of an actor, during creating new movie you have to pass informations about movie by using JSON code. Your JSON code should look like this:
 
-- id - id of the movie,
-- title - title of the movie,
-- releaseDate - date when the movie was released,
-- time - the duration time of the movie,
-- type - type of the movie, for example "Comedy", "Action",
-- director - full name of the director of the movie,
-- actors - ids of actors which play in the movie, separated by commas.
 
-In both cases, you have to choose "POST" as your HTTP method. After creating new actor/movie, they will be added to list of actors/movies and you will get informations about your creation in JSON format. If actor/movie with id which your try to use, already exists, you will get relevant information about it.
+	{
+	  "id": ...,
+	  "title": "...",
+	  "releaseDate": "...",
+	  "time": ...,
+	  "type": "...",
+	  "director": "...",
+	  "actorList": [
+		{
+		  "id": ...,
+		  "name": "..."
+		}
+	  ],
+	  "category": "..."
+	}
 
-![New actor.](http://i.imgur.com/rrPPgjd.png)
+In both cases, you have to choose "POST" as your HTTP method. You have to remember that you have to choose "application json" as "content type". After creating new actor/movie, they will be added to list of actors/movies and you will get informations about your creation in JSON format. If actor/movie with id which your try to use, already exists, null will be returned.
 
-![New movie.](http://i.imgur.com/grjQIVl.png)
+Use example with result for actor:
+
+	curl -H "Content-Type: application/json" -X POST -d "{\"id\":70,\"name\":\"Some Actor\"}" http://localhost:8080/newActor
+	{"id":70,"name":"Some Actor"}
+
+Use example with result for movie:
+
+	curl -H "Content-Type: application/json" -X POST -d "{\"id\": 31,\"title\": \"Some Title\",\"releaseDate\": \"06-01-2017\",\"time\": 122,\"typ
+	e\": \"Comedy\",\"director\": \"Some Director\",\"actorList\": [{\"id\": 70,\"name\": \"Some Actor\"}],\"category\": \"OTHER\"}" http://localhost:8080/newMovie
+	{"id":31,"title":"Some Title","releaseDate":"06-01-2017","time":122,"type":"Comedy","director":"Some Director","actorList":[{"id":70,"name":"Some Actor"}],"available":true,"category"
+	:"OTHER"}
 
 ###Edit actor/movie:
 To edit actor you have to use this adress:
 
 > http://localhost:8080/editActor/{id}
 
-As id you have to write id of the actor. New informations about the actor you have to pass by using header with the following key:
-
-- name - full name of the actor.
-
-To edit movie you have to use this adress:
+As id you have to write id of the actor. New informations about the actor you have to pass by using JSON code the same like during creating new Actor [Create-actor/movie](#Create-actor/movie). To edit movie you have to use this adress:
 
 > http://localhost:8080/editMovie/{id}
 
-As id you have to write id of the movie. You have to pass new informations about movie by using headers with the following keys:
+As id you have to write id of the movie. You have to pass new informations about movie by using JSON code the same like during creating new Movie [Create-actor/movie](#Create-actor/movie). In both cases, you have to choose "PUT" as your HTTP method. After editing actor/movie you will get informations about new version of your object in JSON format.
 
-- title - title of the movie,
-- releaseDate - date when the movie was released,
-- time - the duration time of the movie,
-- type - type of the movie, for example "Comedy", "Action",
-- director - full name of the director of the movie,
-- actors - ids of actors which play in the movie, separated by commas.
+Use example with result for actor:
 
-In both cases, you have to choose "POST" as your HTTP method. During editing actor/movie, all headers are optional so you can for example only change name of the movie. After editing actor/movie you will get informations about new version of your object in JSON format. If actor/movie with this id does not exist, you will get relevant information.
+	curl -H "Content-Type: application/json" -X PUT -d "{\"id\":70,\"name\":\"Some Edited Actor\"}" http://localhost:8080/editActor/70
+	{"id":70,"name":"Some Edited Actor"}
 
-![Edit movie.](http://i.imgur.com/omsu7Tu.png)
+Use example with result for movie:
+
+	curl -H "Content-Type: application/json" -X PUT -d "{\"id\": 31,\"title\": \"Some Edited Title\",\"releaseDate\": \"06-01-2017\",\"time\": 95,
+	\"type\": \"Action\",\"director\": \"Some Director\",\"actorList\": [{\"id\": 70,\"name\": \"Some Edited Actor\"}],\"category\": \"HIT\"}" http://localhost:8080/editMovie/31
+	{"id":31,"title":"Some Edited Title","releaseDate":"06-01-2017","time":95,"type":"Action","director":"Some Director","actorList":[{"id":70,"name":"Some Edited Actor"}],"available":tr
+	ue,"category":"HIT"}
 
 ###Remove actor/movie:
 To remove actor you have to use this adress:
@@ -134,14 +159,23 @@ As id you have to write id of actor. To remove movie, you have to write this URL
 
 > http://localhost:8080/deleteMovie/{id}
 
-As id you have to write id of movie. For example to remove actor with id number "1", you have to use this URL: 
+As id you have to write id of movie. In both cases, you have to choose "DELETE" as your HTTP method. After deletion, new list of actors/movies will be returned in JSON format.
 
-> http://localhost:8080/deleteActor/1
+Use example with result for actor:
 
-And the same for movie. If you want to remove movie with id number "1", you have to use this URL:
+	curl -X DELETE http://localhost:8080/deleteActor/2
+	[{"id":1,"name":"Cezary Pazura"},{"id":3,"name":"Jerzy Stuhr"},...]
 
-> http://localhost:8080/deleteMovie/1
+Use example with result for movie:
 
-In both cases, you have to choose "DELETE" as your HTTP method. After deletion, new list of actors/movies will be returned in JSON format. If actor/movie with this id was not existing during attempting to remove, you will get relevant information. 
+	curl -X DELETE http://localhost:8080/deleteMovie/2
+	[{"id":1,"title":"Kiler","releaseDate":"17-10-1997","time":104,"type":"Comedy","director":"Juliusz Machulski","actorList":[{"id":1,"name":"Cezary Pazura"},{"id":3,"name":"Jerzy Stuhr"},{"id":4,"name":"Janusz Rewinski"}],"available":true,"category":"HIT"},{"id":3,"title":"Chlopaki nie placza", ...}, ...]
 
-![Remove actor.](http://i.imgur.com/YmV7MCK.png)
+
+
+
+
+
+
+
+
