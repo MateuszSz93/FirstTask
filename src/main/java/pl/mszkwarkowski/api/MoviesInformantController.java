@@ -12,7 +12,6 @@ import java.util.*;
 @EnableAutoConfiguration
 public class MoviesInformantController {
     private MoviesInformantStorage moviesInformantStorage = new MoviesInformantStorage();
-    private UserInformantStorage userInformantStorage = new UserInformantStorage();
 
     @RequestMapping("/")
     String home() {
@@ -91,7 +90,6 @@ public class MoviesInformantController {
     public Collection deleteMovie(@PathVariable int id) {
         if (moviesInformantStorage.getMovie(id) != null) {
             moviesInformantStorage.deleteMovie(id);
-            userInformantStorage.removeMovieFromUsersList(id);
         }
         return moviesInformantStorage.getMovies();
     }

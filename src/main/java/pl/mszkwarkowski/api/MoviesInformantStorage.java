@@ -92,9 +92,9 @@ public class MoviesInformantStorage {
      */
     public void deleteMovie(int id) {
         Movie movie = MOVIES.get(id);
-
+        UserInformantStorage userInformantStorage = new UserInformantStorage();
         if (!movie.isAvailable()) {
-
+            userInformantStorage.removeMovieFromUsersList(id);
         }
 
         List<Actor> actorList = movie.getActorList();
@@ -105,7 +105,6 @@ public class MoviesInformantStorage {
                 MOVIES_OF_ACTOR.put(actor.getId(), moviesList);
             }
         }
-
         MOVIES.remove(id);
     }
 
