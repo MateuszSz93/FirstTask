@@ -5,9 +5,12 @@ Movies REST API makes it easy to manage a collection of movies and actors. It st
 - displaying all actors and movies,
 - displaying simple actor or movie by id,
 - editing simple actor or movie by id,
-- deleting simple actor or movie by id.
+- deleting simple actor or movie by id,
+- display user movies,
+- rent movies by user,
+- return movies by user.
 
-Movies REST API also has some additional benefits. For example it displays special information if you try to display empty list of actors/movies or you try to get informations about actors/movies which do not exist. Also you can not create new movie without any actor. And if you want to remove an actor, he/she will be removed from all movies where he/she was playing.
+Movies REST API also has some additional benefits. For example you can not create new movie without any actor. And if you want to remove an actor, he/she will be removed from all movies where he/she was playing.
 
 
 ##Requirements:
