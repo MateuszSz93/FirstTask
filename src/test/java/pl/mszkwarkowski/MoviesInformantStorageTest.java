@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import pl.mszkwarkowski.api.MoviesInformantStorage;
 import pl.mszkwarkowski.movie.Actor;
 import pl.mszkwarkowski.movie.Movie;
+import pl.mszkwarkowski.movie.MovieCategory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,8 +53,8 @@ public class MoviesInformantStorageTest {
         actors.add(actor);
         actors.add(actor1);
 
-        Movie movie = new Movie(1, "First Title", "11-10-2015", 120, "Comedy", "First director", actors);
-        Movie movie1 = new Movie(2, "Second Title", "04-01-1999", 186, "Action", "Second director", actors);
+        Movie movie = new Movie(1, "First Title", "11-10-2015", 120, "Comedy", "First director", actors, MovieCategory.OTHER);
+        Movie movie1 = new Movie(2, "Second Title", "04-01-1999", 186, "Action", "Second director", actors, MovieCategory.HIT);
         List<Movie> movies = new LinkedList();
         movies.add(movie);
         movies.add(movie1);
@@ -92,8 +93,8 @@ public class MoviesInformantStorageTest {
         Actor actor = new Actor(1, "John Doe");
         Actor actor1 = new Actor(2, "Jane Doe");
         List<Actor> actorList = new ArrayList<>();
-        Movie movie = new Movie(1, "First movie", "11-12-2015", 123, "Action", "First director", actorList);
-        Movie movie1 = new Movie(2, "Second movie", "01-02-1995", 182, "Comedy", "Second director", actorList);
+        Movie movie = new Movie(1, "First movie", "11-12-2015", 123, "Action", "First director", actorList, MovieCategory.NEW);
+        Movie movie1 = new Movie(2, "Second movie", "01-02-1995", 182, "Comedy", "Second director", actorList, MovieCategory.HIT);
 
         MoviesInformantStorage moviesInformantStorage1 = new MoviesInformantStorage();
         moviesInformantStorage1.addMovie(movie);
@@ -104,9 +105,13 @@ public class MoviesInformantStorageTest {
         Assert.assertEquals(moviesInformantStorage1.getMovies().size(), 2);
 
         Assert.assertEquals(moviesInformantStorage1.getMovie(1).getTime(), 123);
-        Movie editedMovie = new Movie(1, "Other title", "11-12-2015", 111, "Action", "First director", actorList);
+        Movie editedMovie = new Movie(1, "Other title", "11-12-2015", 111, "Action", "First director", actorList, MovieCategory.NEW);
         moviesInformantStorage1.editMovie(1, editedMovie);
         Assert.assertEquals(moviesInformantStorage1.getMovie(1).getTitle(), "Other title");
         Assert.assertEquals(moviesInformantStorage1.getMovie(1).getTime(), 111);
+        Assert.assertEquals(moviesInformantStorage1.getMoviesByCategory(MovieCategory.HIT).size(), 1);
+        Assert.assertEquals(moviesInformantStorage1.getAvailableMovies().size(), 2);
+        movie1.setAvailable(false);
+        Assert.assertEquals(moviesInformantStorage1.getAvailableMovies().size(), 1);
     }
 }

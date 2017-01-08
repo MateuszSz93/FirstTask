@@ -13,10 +13,12 @@ public class Movie {
     private String type;
     private String director;
     private List<Actor> actorList;
+    private boolean available;
+    private MovieCategory category;
 
-    public Movie(){}
+    public Movie() {}
 
-    public Movie(int id, String title, String releaseDate, int time, String type, String director, List<Actor> actorList){
+    public Movie(int id, String title, String releaseDate, int time, String type, String director, List<Actor> actorList, MovieCategory category) {
         this.id = id;
         this.title = title;
         this.releaseDate = releaseDate;
@@ -24,61 +26,43 @@ public class Movie {
         this.type = type;
         this.director = director;
         this.actorList = actorList;
+        this.available = true;
+        this.category = category;
     }
 
-    public List<Actor> getActorList() {
-        return actorList;
-    }
+    public int getId() { return id; }
 
-    public void setActorList(List<Actor> actorList) {
-        this.actorList = actorList;
-    }
+    public void setId(int id) { this.id = id; }
 
-    public int getId() {
-        return id;
-    }
+    public String getTitle() { return title; }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    public void setTitle(String title) { this.title = title; }
 
-    public String getTitle() {
-        return title;
-    }
+    public String getReleaseDate() { return releaseDate; }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public void setReleaseDate(String releaseDate) { this.releaseDate = releaseDate; }
 
-    public String getReleaseDate() {
-        return releaseDate;
-    }
+    public int getTime() { return time; }
 
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
-    }
+    public void setTime(int time) { this.time = time; }
 
-    public int getTime() {
-        return time;
-    }
+    public String getType() { return type; }
 
-    public void setTime(int time) {
-        this.time = time;
-    }
+    public void setType(String type) { this.type = type; }
 
-    public String getType() {
-        return type;
-    }
+    public String getDirector() { return director; }
 
-    public void setType(String type) {
-        this.type = type;
-    }
+    public void setDirector(String director) { this.director = director; }
 
-    public String getDirector() {
-        return director;
-    }
+    public List<Actor> getActorList() { return actorList; }
 
-    public void setDirector(String director) {
-        this.director = director;
-    }
+    public void setActorList(List<Actor> actorList) { this.actorList = actorList; }
+
+    public boolean isAvailable() { return available; }
+
+    public void setAvailable(boolean available) { this.available = available; }
+
+    public MovieCategory getCategory() { return category; }
+
+    public void setCategory(MovieCategory category) { this.category = category; }
 }

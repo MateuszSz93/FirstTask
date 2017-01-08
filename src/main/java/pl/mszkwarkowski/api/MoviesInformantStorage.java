@@ -3,6 +3,7 @@ package pl.mszkwarkowski.api;
 import org.springframework.beans.BeanUtils;
 import pl.mszkwarkowski.movie.Actor;
 import pl.mszkwarkowski.movie.Movie;
+import pl.mszkwarkowski.movie.MovieCategory;
 
 import java.util.*;
 
@@ -91,8 +92,12 @@ public class MoviesInformantStorage {
      */
     public void deleteMovie(int id) {
         Movie movie = MOVIES.get(id);
-        List<Actor> actorList = movie.getActorList();
 
+        if (!movie.isAvailable()) {
+
+        }
+
+        List<Actor> actorList = movie.getActorList();
         if (actorList.size() > 0) {
             for (Actor actor : actorList) {
                 List<Integer> moviesList = MOVIES_OF_ACTOR.get(actor.getId());
@@ -100,6 +105,7 @@ public class MoviesInformantStorage {
                 MOVIES_OF_ACTOR.put(actor.getId(), moviesList);
             }
         }
+
         MOVIES.remove(id);
     }
 
@@ -140,6 +146,7 @@ public class MoviesInformantStorage {
      * @param movie is Movie object which has new data for Movie object which already exists on the list.
      */
     public void editMovie(int id, Movie movie) {
+        movie.setAvailable(MOVIES.get(id).isAvailable());
         List<Actor> currentActors = MOVIES.get(id).getActorList();
         for (Actor actor : currentActors) {
             if (!movie.getActorList().contains(actor)) {
@@ -158,9 +165,9 @@ public class MoviesInformantStorage {
     }
 
     /**
-     * This method takes this list of Actors which play in the movie. For each "Actor" object it checks if "Actor" with this id already exists. If not, it add him to Actors List. After that, it checks if given Actor object has the same name like Actor object about the same id on the list. If yes, it adds movie id and actor id to MOVIES_OF_ACTOR map.
+     * This method takes this list of Actors which play in the movie. For each "Actor" object it checks if "Actor" with this id already exists. If not, it add him to Actors List. After that, it checks if given Actor object has the same name as Actor object with the same id on the list. If yes, it adds movie id and actor id to MOVIES_OF_ACTOR map.
      *
-     * @param actorList
+     * @param actorList - List of Actor objects.
      * @param movieId
      * @return actorList List of actors id which play in the movie whose id is given as parameter.
      */
@@ -176,5 +183,36 @@ public class MoviesInformantStorage {
             }
         }
         return actorsWithUniqueId;
+    }
+
+    /**
+     * This method creates and returns list of Movies which have the same category.
+     *
+     * @param category of movies.
+     * @return list of Movie objects.
+     */
+    public List<Movie> getMoviesByCategory(MovieCategory category) {
+        List<Movie> sameCategoryMovies = new ArrayList<>();
+        for (Movie movie : MOVIES.values()) {
+            if (movie.getCategory().equals(category)) {
+                sameCategoryMovies.add(movie);
+            }
+        }
+        return sameCategoryMovies;
+    }
+
+    /**
+     * This method creates and returns list of Movies which are available.
+     *
+     * @return list of Movie objects.
+     */
+    public List<Movie> getAvailableMovies() {
+        List<Movie> sameAvailabilityMovies = new ArrayList<>();
+        for (Movie movie : MOVIES.values()) {
+            if (movie.isAvailable()) {
+                sameAvailabilityMovies.add(movie);
+            }
+        }
+        return sameAvailabilityMovies;
     }
 }

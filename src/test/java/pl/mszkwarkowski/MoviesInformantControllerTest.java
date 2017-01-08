@@ -31,7 +31,6 @@ import pl.mszkwarkowski.data.Creator;
 @WebAppConfiguration
 @ContextConfiguration
 public class MoviesInformantControllerTest {
-
     @Autowired
     private WebApplicationContext wac;
     private MockMvc mockMvc;
@@ -64,6 +63,7 @@ public class MoviesInformantControllerTest {
         mockMvc.perform(get("/movies").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(jsonPath("$.*", hasSize(30)))
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].title").value("Kiler"))
                 .andExpect(jsonPath("$[0].releaseDate").value("17-10-1997"))
@@ -71,7 +71,9 @@ public class MoviesInformantControllerTest {
                 .andExpect(jsonPath("$[0].type").value("Comedy"))
                 .andExpect(jsonPath("$[0].director").value("Juliusz Machulski"))
                 .andExpect(jsonPath("$[0].actorList", hasSize(4)))
-                .andExpect(jsonPath("[0].actorList[*].name", Matchers.containsInAnyOrder("Cezary Pazura", "Małgorzata Kożuchowska", "Jerzy Stuhr", "Janusz Rewiński")))
+                .andExpect(jsonPath("$[0].actorList[*].name", Matchers.containsInAnyOrder("Cezary Pazura", "Małgorzata Kożuchowska", "Jerzy Stuhr", "Janusz Rewiński")))
+                .andExpect(jsonPath("$[0].available").value(true))
+                .andExpect(jsonPath("$[0].category").value("HIT"))
                 .andExpect(jsonPath("$[1].id").value(2))
                 .andExpect(jsonPath("$[1].title").value("Poranek kojota"))
                 .andExpect(jsonPath("$[1].releaseDate").value("24-08-2001"))
@@ -79,56 +81,91 @@ public class MoviesInformantControllerTest {
                 .andExpect(jsonPath("$[1].type").value("Comedy"))
                 .andExpect(jsonPath("$[1].director").value("Olaf Lubaszenko"))
                 .andExpect(jsonPath("$[1].actorList", hasSize(4)))
-                .andExpect(jsonPath("[1].actorList[*].name", Matchers.containsInAnyOrder("Maciej Stuhr", "Michał Milowicz", "Karolina Rosińska", "Edward Linde-Lubaszenko")));
+                .andExpect(jsonPath("$[1].actorList[*].name", Matchers.containsInAnyOrder("Maciej Stuhr", "Michał Milowicz", "Karolina Rosińska", "Edward Linde-Lubaszenko")))
+                .andExpect(jsonPath("$[1].available").value(true))
+                .andExpect(jsonPath("$[1].category").value("HIT"))
+                .andExpect(jsonPath("$[9].id").value(10))
+                .andExpect(jsonPath("$[9].title").value("Shutter Island"))
+                .andExpect(jsonPath("$[9].director").value("Martin Scorsese"))
+                .andExpect(jsonPath("$[10].director").value("Steven Spielberg"))
+                .andExpect(jsonPath("$[11].actorList[*].name", Matchers.containsInAnyOrder("Edward Norton", "Brad Pitt", "Helena Bonham Carter")))
+                .andExpect(jsonPath("$[13].title").value("The Dark Knight"))
+                .andExpect(jsonPath("$[13].actorList[*].id", Matchers.containsInAnyOrder(33, 34, 35, 64)))
+                .andExpect(jsonPath("$[13].category").value("OTHER"))
+                .andExpect(jsonPath("$[16].id").value(17))
+                .andExpect(jsonPath("$[16].title").value("The Bourne Identity"))
+                .andExpect(jsonPath("$[20].releaseDate").value("12-10-2016"))
+                .andExpect(jsonPath("$[20].type").value("Thriller"))
+                .andExpect(jsonPath("$[28].id").value(29))
+                .andExpect(jsonPath("$[28].title").value("Sully"))
+                .andExpect(jsonPath("$[28].director").value("Clint Eastwood"));
     }
 
     @Test
     public void getActorsDataTest() throws Exception {
-        MvcResult result = mockMvc.perform(get("/actors").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/actors").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].name").value("Cezary Pazura"))
-                .andExpect(jsonPath("$.*", hasSize(8)))
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-        Assert.assertEquals("[{\"id\":1,\"name\":\"Cezary Pazura\"},{\"id\":2,\"name\":\"Małgorzata Kożuchowska\"},{\"id\":3,\"name\":\"Jerzy Stuhr\"},{\"id\":4,\"name\":\"Janusz Rewiński\"},{\"id\":5,\"name\":\"Maciej Stuhr\"},{\"id\":6,\"name\":\"Karolina Rosińska\"},{\"id\":7,\"name\":\"Michał Milowicz\"},{\"id\":8,\"name\":\"Edward Linde-Lubaszenko\"}]", content);
+                .andExpect(jsonPath("$[12].id").value("13"))
+                .andExpect(jsonPath("$[12].name").value("Marlon Brando"))
+                .andExpect(jsonPath("$[18].id").value("19"))
+                .andExpect(jsonPath("$[18].name").value("Joe Pesci"))
+                .andExpect(jsonPath("$[27].id").value("28"))
+                .andExpect(jsonPath("$[27].name").value("Ben Kingsley"))
+                .andExpect(jsonPath("$[32].id").value("33"))
+                .andExpect(jsonPath("$[32].name").value("Christian Bale"))
+                .andExpect(jsonPath("$[38].id").value("39"))
+                .andExpect(jsonPath("$[38].name").value("Amy Smart"))
+                .andExpect(jsonPath("$[43].id").value("44"))
+                .andExpect(jsonPath("$[43].name").value("Tom Hanks"))
+                .andExpect(jsonPath("$[49].id").value("50"))
+                .andExpect(jsonPath("$[49].name").value("Shailene Woodley"))
+                .andExpect(jsonPath("$[60].id").value("61"))
+                .andExpect(jsonPath("$[60].name").value("Amy Adams"))
+                .andExpect(jsonPath("$[66].id").value("67"))
+                .andExpect(jsonPath("$[66].name").value("Bradley Cooper"))
+                .andExpect(jsonPath("$.*", hasSize(68)));
     }
 
     @Test
     public void addActorTest() throws Exception {
-        MvcResult result = mockMvc.perform(post("/newActor").contentType(MediaType.APPLICATION_JSON).content("{\"id\":9,\"name\":\"Tadeusz Huk\"}"))
+        MvcResult result = mockMvc.perform(post("/newActor").contentType(MediaType.APPLICATION_JSON).content("{\"id\":69,\"name\":\"Tadeusz Huk\"}"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(jsonPath("$.id").value(9))
+                .andExpect(jsonPath("$.id").value(69))
                 .andExpect(jsonPath("$.name").value("Tadeusz Huk"))
                 .andReturn();
-        ;
 
         String content = result.getResponse().getContentAsString();
-        Assert.assertEquals("{\"id\":9,\"name\":\"Tadeusz Huk\"}", content);
+        Assert.assertEquals("{\"id\":69,\"name\":\"Tadeusz Huk\"}", content);
     }
 
     @Test
     public void addMovieTest() throws Exception {
-        mockMvc.perform(post("/newMovie").contentType(MediaType.APPLICATION_JSON).content("{\"id\":3,\"title\":\"Some Title\",\"releaseDate\":\"18-12-2016\",\"time\":100,\"type\":\"Action\",\"director\":\"Some Director\",\"actorList\":[{\"id\":1,\"name\":\"Cezary Pazura\"},{\"id\":2,\"name\":\"Małgorzata Kożuchowska\"},{\"id\":8,\"name\":\"Edward Linde-Lubaszenko\"},{\"id\":9,\"name\":\"Tadeusz Huk\"}]}"))
+        MvcResult result = mockMvc.perform(post("/newMovie").contentType(MediaType.APPLICATION_JSON).content("{\"id\":31,\"title\":\"Some Title\",\"releaseDate\":\"18-12-2016\",\"time\":100,\"type\":\"Action\",\"director\":\"Some Director\",\"actorList\":[{\"id\":1,\"name\":\"Cezary Pazura\"},{\"id\":2,\"name\":\"Małgorzata Kożuchowska\"},{\"id\":8,\"name\":\"Edward Linde-Lubaszenko\"},{\"id\":9,\"name\":\"Actor With This Id Already Exists\"},{\"id\":70,\"name\":\"Somebody New\"}],\"category\":\"HIT\"}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(3))
-                .andExpect(jsonPath("actorList[*].name", Matchers.containsInAnyOrder("Tadeusz Huk", "Cezary Pazura", "Małgorzata Kożuchowska", "Edward Linde-Lubaszenko")))
+                .andExpect(jsonPath("$.id").value(31))
+                .andExpect(jsonPath("actorList[*].name", Matchers.containsInAnyOrder("Cezary Pazura", "Małgorzata Kożuchowska", "Edward Linde-Lubaszenko", "Somebody New")))
                 .andExpect(jsonPath("$.title").value("Some Title"))
-                .andExpect(jsonPath("$.time").value(100));
+                .andExpect(jsonPath("$.time").value(100))
+                .andExpect(jsonPath("$.available").value(true))
+                .andExpect(jsonPath("$.category").value("HIT"))
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        Assert.assertEquals("{\"id\":31,\"title\":\"Some Title\",\"releaseDate\":\"18-12-2016\",\"time\":100,\"type\":\"Action\",\"director\":\"Some Director\",\"actorList\":[{\"id\":1,\"name\":\"Cezary Pazura\"},{\"id\":2,\"name\":\"Małgorzata Kożuchowska\"},{\"id\":8,\"name\":\"Edward Linde-Lubaszenko\"},{\"id\":70,\"name\":\"Somebody New\"}],\"available\":true,\"category\":\"HIT\"}", content);
     }
 
     @Test
     public void actorDataTest() throws Exception {
-        MvcResult result = mockMvc.perform(get("/actor/{id}", 1).accept(MediaType.APPLICATION_JSON).header("id", 3).header("title", "Some Title").header("releaseDate", "18-12-2016").header("time", 100).header("type", "Action").header("director", "Some Director").header("actors", "1, 2, 8, 9"))
+        MvcResult result = mockMvc.perform(get("/actor/{id}", 1).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("Cezary Pazura"))
                 .andReturn();
-        ;
 
         String content = result.getResponse().getContentAsString();
         Assert.assertEquals("{\"id\":1,\"name\":\"Cezary Pazura\"}", content);
@@ -136,7 +173,7 @@ public class MoviesInformantControllerTest {
 
     @Test
     public void movieDataTest() throws Exception {
-        mockMvc.perform(get("/movie/{id}", 2).accept(MediaType.APPLICATION_JSON).header("id", 3).header("title", "Some Title").header("releaseDate", "18-12-2016").header("time", 100).header("type", "Action").header("director", "Some Director").header("actors", "1, 2, 8, 9"))
+        mockMvc.perform(get("/movie/{id}", 2).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.id").value(2))
@@ -150,18 +187,16 @@ public class MoviesInformantControllerTest {
         mockMvc.perform(delete("/deleteActor/{id}", 7).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(jsonPath("$[*].name", Matchers.containsInAnyOrder("Tadeusz Huk", "Cezary Pazura", "Małgorzata Kożuchowska", "Edward Linde-Lubaszenko", "Jerzy Stuhr", "Maciej Stuhr", "Karolina Rosińska", "Janusz Rewiński")))
-                .andExpect(jsonPath("$.*", hasSize(8)));
+                .andExpect(jsonPath("$[20].id").value("22"))
+                .andExpect(jsonPath("$[20].name").value("Jack Nicholson"))
+                .andExpect(jsonPath("$.*", hasSize(69)));
 
-        MvcResult result = mockMvc.perform(delete("/deleteActor/{id}", 2).accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete("/deleteActor/{id}", 2).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(jsonPath("$[*].name", Matchers.containsInAnyOrder("Tadeusz Huk", "Cezary Pazura", "Edward Linde-Lubaszenko", "Jerzy Stuhr", "Maciej Stuhr", "Karolina Rosińska", "Janusz Rewiński")))
-                .andExpect(jsonPath("$.*", hasSize(7)))
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-        Assert.assertEquals("[{\"id\":1,\"name\":\"Cezary Pazura\"},{\"id\":3,\"name\":\"Jerzy Stuhr\"},{\"id\":4,\"name\":\"Janusz Rewiński\"},{\"id\":5,\"name\":\"Maciej Stuhr\"},{\"id\":6,\"name\":\"Karolina Rosińska\"},{\"id\":8,\"name\":\"Edward Linde-Lubaszenko\"},{\"id\":9,\"name\":\"Tadeusz Huk\"}]", content);
+                .andExpect(jsonPath("$[20].id").value("23"))
+                .andExpect(jsonPath("$[20].name").value("Mark Wahlberg"))
+                .andExpect(jsonPath("$.*", hasSize(68)));
     }
 
     @Test
@@ -169,20 +204,16 @@ public class MoviesInformantControllerTest {
         mockMvc.perform(delete("/deleteMovie/{id}", 2).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(jsonPath("$[*].title", Matchers.containsInAnyOrder("Kiler", "Some Title")))
-                .andExpect(jsonPath("$[*].id", Matchers.containsInAnyOrder(1, 3)))
-                .andExpect(jsonPath("$.*", hasSize(2)));
+                .andExpect(jsonPath("$[22].id").value(24))
+                .andExpect(jsonPath("$[22].title").value("Doctor Strange"))
+                .andExpect(jsonPath("$.*", hasSize(30)));
 
-        MvcResult result = mockMvc.perform(delete("/deleteMovie/{id}", 3).accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete("/deleteMovie/{id}", 3).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(jsonPath("$[*].title", Matchers.containsInAnyOrder("Kiler")))
-                .andExpect(jsonPath("$[*].id", Matchers.containsInAnyOrder(1)))
-                .andExpect(jsonPath("$.*", hasSize(1)))
-                .andReturn();
-
-        String content = result.getResponse().getContentAsString();
-        Assert.assertEquals("[{\"id\":1,\"title\":\"Kiler\",\"releaseDate\":\"17-10-1997\",\"time\":104,\"type\":\"Comedy\",\"director\":\"Juliusz Machulski\",\"actorList\":[{\"id\":1,\"name\":\"Cezary Pazura\"},{\"id\":2,\"name\":\"Małgorzata Kożuchowska\"},{\"id\":3,\"name\":\"Jerzy Stuhr\"},{\"id\":4,\"name\":\"Janusz Rewiński\"}]}]", content);
+                .andExpect(jsonPath("$[22].id").value(25))
+                .andExpect(jsonPath("$[22].title").value("The Accountant"))
+                .andExpect(jsonPath("$.*", hasSize(29)));
     }
 
     @Test
@@ -192,7 +223,6 @@ public class MoviesInformantControllerTest {
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("Jason Statham"))
                 .andReturn();
-        ;
 
         String content = result.getResponse().getContentAsString();
         Assert.assertEquals("{\"id\":1,\"name\":\"Jason Statham\"}", content);
@@ -200,16 +230,46 @@ public class MoviesInformantControllerTest {
 
     @Test
     public void editMovieTest() throws Exception {
-        MvcResult result = mockMvc.perform(put("/editMovie/{id}", 1).contentType(MediaType.APPLICATION_JSON).content("{\"id\":1,\"title\":\"Some New Title\",\"releaseDate\":\"17-10-1997\",\"time\":321,\"type\":\"Comedy\",\"director\":\"Juliusz Machulski\",\"actorList\":[{\"id\":1,\"name\":\"Cezary Pazura\"},{\"id\":5,\"name\":\"Maciej Stuhr\"},{\"id\":8,\"name\":\"Edward Linde-Lubaszenko\"}]}"))
+        MvcResult result = mockMvc.perform(put("/editMovie/{id}", 1).contentType(MediaType.APPLICATION_JSON).content("{\"id\":1,\"title\":\"Some New Title\",\"releaseDate\":\"17-10-1997\",\"time\":321,\"type\":\"Comedy\",\"director\":\"Juliusz Machulski\",\"actorList\":[{\"id\":1,\"name\":\"Cezary Pazura\"},{\"id\":5,\"name\":\"Maciej Stuhr\"},{\"id\":8,\"name\":\"Edward Linde-Lubaszenko\"}],\"category\":\"HIT\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("actorList[*].name", Matchers.containsInAnyOrder("Cezary Pazura", "Maciej Stuhr", "Edward Linde-Lubaszenko")))
                 .andExpect(jsonPath("$.title").value("Some New Title"))
                 .andExpect(jsonPath("$.time").value(321))
+                .andExpect(jsonPath("$.category").value("HIT"))
                 .andReturn();
-        ;
 
         String content = result.getResponse().getContentAsString();
-        Assert.assertEquals("{\"id\":1,\"title\":\"Some New Title\",\"releaseDate\":\"17-10-1997\",\"time\":321,\"type\":\"Comedy\",\"director\":\"Juliusz Machulski\",\"actorList\":[{\"id\":1,\"name\":\"Cezary Pazura\"},{\"id\":5,\"name\":\"Maciej Stuhr\"},{\"id\":8,\"name\":\"Edward Linde-Lubaszenko\"}]}", content);
+        Assert.assertEquals("{\"id\":1,\"title\":\"Some New Title\",\"releaseDate\":\"17-10-1997\",\"time\":321,\"type\":\"Comedy\",\"director\":\"Juliusz Machulski\",\"actorList\":[{\"id\":1,\"name\":\"Cezary Pazura\"},{\"id\":5,\"name\":\"Maciej Stuhr\"},{\"id\":8,\"name\":\"Edward Linde-Lubaszenko\"}],\"available\":true,\"category\":\"HIT\"}", content);
+    }
+
+    @Test
+    public void getSameCategoryMoviesTest() throws Exception {
+        mockMvc.perform(get("/moviesByCategory/NEW"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(21))
+                .andExpect(jsonPath("$[0].title").value("Inferno"))
+                .andExpect(jsonPath("$[4].id").value(25))
+                .andExpect(jsonPath("$[4].title").value("The Accountant"))
+                .andExpect(jsonPath("$[9].id").value(30))
+                .andExpect(jsonPath("$[9].title").value("War Dogs"))
+                .andExpect(jsonPath("$.*", hasSize(10)));
+    }
+
+    @Test
+    public void displayAvailableMoviesTest() throws Exception {
+        mockMvc.perform(get("/availableMovies").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(jsonPath("$[10].id").value(12))
+                .andExpect(jsonPath("$[10].title").value("Fight Club"))
+                .andExpect(jsonPath("$[12].director").value("Quentin Tarantino"))
+                .andExpect(jsonPath("$[1].available").value(true))
+                .andExpect(jsonPath("$[7].available").value(true))
+                .andExpect(jsonPath("$[13].available").value(true))
+                .andExpect(jsonPath("$[19].available").value(true))
+                .andExpect(jsonPath("$[22].available").value(true))
+                .andExpect(jsonPath("$[27].available").value(true))
+                .andExpect(jsonPath("$.*", hasSize(28)));
     }
 }
