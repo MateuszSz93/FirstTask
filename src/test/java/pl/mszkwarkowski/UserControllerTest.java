@@ -59,7 +59,7 @@ public class UserControllerTest {
 
     @Test
     public void addUserTest() throws Exception {
-        MvcResult result = mockMvc.perform(post("/newUser").contentType(MediaType.APPLICATION_JSON).content("{\"id\":2,\"name\":\"Some New User\"}"))
+        MvcResult result = mockMvc.perform(post("/user").contentType(MediaType.APPLICATION_JSON).content("{\"id\":2,\"name\":\"Some New User\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(2))
                 .andExpect(jsonPath("$.name").value("Some New User"))
@@ -85,22 +85,17 @@ public class UserControllerTest {
 
     @Test
     public void rentMoviesTest() throws Exception {
-        MvcResult result = mockMvc.perform(put("/rentMovies/{userId}/{moviesId}", 1, "1, 25"))
+        MvcResult result = mockMvc.perform(put("/userMovies/{userId}/{moviesId}", 1, "1, 25"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].title").value("Kiler"))
-                .andExpect(jsonPath("$[1].id").value(25))
-                .andExpect(jsonPath("$[1].title").value("The Accountant"))
-                .andExpect(jsonPath("$.*", hasSize(2)))
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        Assert.assertEquals("[{\"id\":1,\"title\":\"Kiler\",\"releaseDate\":\"17-10-1997\",\"time\":104,\"type\":\"Comedy\",\"director\":\"Juliusz Machulski\",\"actorList\":[{\"id\":1,\"name\":\"Cezary Pazura\"},{\"id\":2,\"name\":\"Małgorzata Kożuchowska\"},{\"id\":3,\"name\":\"Jerzy Stuhr\"},{\"id\":4,\"name\":\"Janusz Rewiński\"}],\"available\":false,\"category\":\"HIT\"},{\"id\":25,\"title\":\"The Accountant\",\"releaseDate\":\"06-10-2016\",\"time\":128,\"type\":\"Drama\",\"director\":\"Gavin O'Connor\",\"actorList\":[{\"id\":55,\"name\":\"Anna Kendrick\"},{\"id\":56,\"name\":\"Ben Affleck\"}],\"available\":false,\"category\":\"NEW\"}]", content);
+        Assert.assertEquals("24.90", content);
     }
 
     @Test
     public void returnMoviesTest() throws Exception {
-        MvcResult result = mockMvc.perform(delete("/returnMovies/{userId}/{moviesId}", 1, "8, 13"))
+        MvcResult result = mockMvc.perform(delete("/userMovies/{userId}/{moviesId}", 1, "8, 13"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(24))
                 .andExpect(jsonPath("$[0].title").value("Doctor Strange"))
@@ -113,23 +108,17 @@ public class UserControllerTest {
 
     @Test
     public void fourMoviesDiscountsTest() throws Exception {
-        mockMvc.perform(post("/newUser").contentType(MediaType.APPLICATION_JSON).content("{\"id\":3,\"name\":\"New User\"}"))
+        mockMvc.perform(post("/user").contentType(MediaType.APPLICATION_JSON).content("{\"id\":3,\"name\":\"New User\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(3))
                 .andExpect(jsonPath("$.name").value("New User"))
                 .andExpect(jsonPath("$.debt").value(new BigDecimal(0)));
 
-        mockMvc.perform(put("/rentMovies/{userId}/{moviesId}", 3, "1, 2, 12, 25"))
+        MvcResult result = mockMvc.perform(put("/userMovies/{userId}/{moviesId}", 3, "1, 2, 12, 25"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].title").value("Kiler"))
-                .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[1].title").value("Poranek kojota"))
-                .andExpect(jsonPath("$[2].id").value(12))
-                .andExpect(jsonPath("$[2].title").value("Fight Club"))
-                .andExpect(jsonPath("$[3].id").value(25))
-                .andExpect(jsonPath("$[3].title").value("The Accountant"))
-                .andExpect(jsonPath("$.*", hasSize(4)));
+                .andReturn();
+        String content = result.getResponse().getContentAsString();
+        Assert.assertEquals("34.85", content);
 
         mockMvc.perform(get("/user/{id}", 3))
                 .andExpect(status().isOk())
@@ -140,24 +129,22 @@ public class UserControllerTest {
 
     @Test
     public void twoNewDiscountsTest() throws Exception {
-        mockMvc.perform(post("/newUser").contentType(MediaType.APPLICATION_JSON).content("{\"id\":4,\"name\":\"Next New User\"}"))
+        mockMvc.perform(post("/user").contentType(MediaType.APPLICATION_JSON).content("{\"id\":4,\"name\":\"Next New User\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(4))
                 .andExpect(jsonPath("$.name").value("Next New User"))
                 .andExpect(jsonPath("$.debt").value(new BigDecimal(0)));
 
-        mockMvc.perform(put("/rentMovies/{userId}/{moviesId}", 4, "27, 28"))
+        MvcResult result = mockMvc.perform(put("/userMovies/{userId}/{moviesId}", 4, "27, 28, 3"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(27))
-                .andExpect(jsonPath("$[0].title").value("Hacksaw Ridge"))
-                .andExpect(jsonPath("$[1].id").value(28))
-                .andExpect(jsonPath("$[1].title").value("Arrival"))
-                .andExpect(jsonPath("$.*", hasSize(2)));
+                .andReturn();
+        String content = result.getResponse().getContentAsString();
+        Assert.assertEquals("29.89", content);
 
         mockMvc.perform(get("/user/{id}", 4))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(4))
                 .andExpect(jsonPath("$.name").value("Next New User"))
-                .andExpect(jsonPath("$.debt").value(22.43));
+                .andExpect(jsonPath("$.debt").value(29.89));
     }
 }

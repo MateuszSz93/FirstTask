@@ -74,7 +74,7 @@ public class UserInformantStorage {
      * @param moviesId
      * @return list of movies objects.
      */
-    public List<Movie> rentMovies(int userId, int[] moviesId) {
+    public BigDecimal rentMovies(int userId, int[] moviesId) {
         MoviesInformantStorage moviesInformantStorage = new MoviesInformantStorage();
         List<Movie> availableMoviesList = new ArrayList<>();
         List<Movie> acceptedMovies = new ArrayList<>();
@@ -91,9 +91,9 @@ public class UserInformantStorage {
 
         for (Movie movie : availableMoviesList) {
             if (LIST_OF_USER_MOVIES.get(userId).size() != 10) {
-                if (availableMoviesList.size() == 4 && movie.getCategory() == MovieCategory.OTHER && !otherMovie && LIST_OF_USER_MOVIES.get(userId).size() != moviesLeftFourDiscount++) {
+                if (availableMoviesList.size() >= 4 && movie.getCategory() == MovieCategory.OTHER && !otherMovie && LIST_OF_USER_MOVIES.get(userId).size() != moviesLeftFourDiscount++) {
                     otherMovie = true;
-                } else if (availableMoviesList.size() == 2 && movie.getCategory() == MovieCategory.NEW) {
+                } else if (movie.getCategory() == MovieCategory.NEW) {
                     newMoviesAmount++;
                     payment = payment.add(movie.getCategory().value());
                 } else {
@@ -104,11 +104,11 @@ public class UserInformantStorage {
                 acceptedMovies.add(movie);
             }
         }
-        if (newMoviesAmount == 2) {
+        if (newMoviesAmount >= 2) {
             payment = payment.multiply(new BigDecimal(0.75));
         }
         getUser(userId).setDebt(getUser(userId).getDebt().add(payment).setScale(2, RoundingMode.CEILING));
-        return acceptedMovies;
+        return payment.setScale(2, RoundingMode.CEILING);
     }
 
     /**

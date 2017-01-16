@@ -399,6 +399,10 @@ public class Creator {
 
         UserInformantStorage userInformantStorage = new UserInformantStorage();
         userInformantStorage.addUser(new User(1, "Jan Kowalski"));
-        userInformantStorage.rentMovies(1, new int[]{8, 13, 24});
+        try {
+            userInformantStorage.rentMovies(1, new int[]{8, 13, 24});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

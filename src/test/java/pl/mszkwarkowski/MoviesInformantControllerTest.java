@@ -131,7 +131,7 @@ public class MoviesInformantControllerTest {
 
     @Test
     public void addActorTest() throws Exception {
-        MvcResult result = mockMvc.perform(post("/newActor").contentType(MediaType.APPLICATION_JSON).content("{\"id\":69,\"name\":\"Tadeusz Huk\"}"))
+        MvcResult result = mockMvc.perform(post("/actor").contentType(MediaType.APPLICATION_JSON).content("{\"id\":69,\"name\":\"Tadeusz Huk\"}"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.id").value(69))
@@ -144,7 +144,7 @@ public class MoviesInformantControllerTest {
 
     @Test
     public void addMovieTest() throws Exception {
-        MvcResult result = mockMvc.perform(post("/newMovie").contentType(MediaType.APPLICATION_JSON).content("{\"id\":31,\"title\":\"Some Title\",\"releaseDate\":\"18-12-2016\",\"time\":100,\"type\":\"Action\",\"director\":\"Some Director\",\"actorList\":[{\"id\":1,\"name\":\"Cezary Pazura\"},{\"id\":2,\"name\":\"Małgorzata Kożuchowska\"},{\"id\":8,\"name\":\"Edward Linde-Lubaszenko\"},{\"id\":9,\"name\":\"Actor With This Id Already Exists\"},{\"id\":70,\"name\":\"Somebody New\"}],\"category\":\"HIT\"}"))
+        MvcResult result = mockMvc.perform(post("/movie").contentType(MediaType.APPLICATION_JSON).content("{\"id\":31,\"title\":\"Some Title\",\"releaseDate\":\"18-12-2016\",\"time\":100,\"type\":\"Action\",\"director\":\"Some Director\",\"actorList\":[{\"id\":1,\"name\":\"Cezary Pazura\"},{\"id\":2,\"name\":\"Małgorzata Kożuchowska\"},{\"id\":8,\"name\":\"Edward Linde-Lubaszenko\"},{\"id\":9,\"name\":\"Actor With This Id Already Exists\"},{\"id\":70,\"name\":\"Somebody New\"}],\"category\":\"HIT\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(31))
                 .andExpect(jsonPath("actorList[*].name", Matchers.containsInAnyOrder("Cezary Pazura", "Małgorzata Kożuchowska", "Edward Linde-Lubaszenko", "Somebody New")))
@@ -184,14 +184,14 @@ public class MoviesInformantControllerTest {
 
     @Test
     public void deleteActorTest() throws Exception {
-        mockMvc.perform(delete("/deleteActor/{id}", 7).accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete("/actor/{id}", 7).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$[20].id").value("22"))
                 .andExpect(jsonPath("$[20].name").value("Jack Nicholson"))
                 .andExpect(jsonPath("$.*", hasSize(69)));
 
-        mockMvc.perform(delete("/deleteActor/{id}", 2).accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete("/actor/{id}", 2).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$[20].id").value("23"))
@@ -201,14 +201,14 @@ public class MoviesInformantControllerTest {
 
     @Test
     public void deleteMovieTest() throws Exception {
-        mockMvc.perform(delete("/deleteMovie/{id}", 2).accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete("/movie/{id}", 2).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$[22].id").value(24))
                 .andExpect(jsonPath("$[22].title").value("Doctor Strange"))
                 .andExpect(jsonPath("$.*", hasSize(30)));
 
-        mockMvc.perform(delete("/deleteMovie/{id}", 3).accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete("/movie/{id}", 3).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$[22].id").value(25))
@@ -218,7 +218,7 @@ public class MoviesInformantControllerTest {
 
     @Test
     public void editActorTest() throws Exception {
-        MvcResult result = mockMvc.perform(put("/editActor/{id}", 1).contentType(MediaType.APPLICATION_JSON).content("{\"id\":1,\"name\":\"Jason Statham\"}"))
+        MvcResult result = mockMvc.perform(put("/actor/{id}", 1).contentType(MediaType.APPLICATION_JSON).content("{\"id\":1,\"name\":\"Jason Statham\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("Jason Statham"))
@@ -230,7 +230,7 @@ public class MoviesInformantControllerTest {
 
     @Test
     public void editMovieTest() throws Exception {
-        MvcResult result = mockMvc.perform(put("/editMovie/{id}", 1).contentType(MediaType.APPLICATION_JSON).content("{\"id\":1,\"title\":\"Some New Title\",\"releaseDate\":\"17-10-1997\",\"time\":321,\"type\":\"Comedy\",\"director\":\"Juliusz Machulski\",\"actorList\":[{\"id\":1,\"name\":\"Cezary Pazura\"},{\"id\":5,\"name\":\"Maciej Stuhr\"},{\"id\":8,\"name\":\"Edward Linde-Lubaszenko\"}],\"category\":\"HIT\"}"))
+        MvcResult result = mockMvc.perform(put("/movie/{id}", 1).contentType(MediaType.APPLICATION_JSON).content("{\"id\":1,\"title\":\"Some New Title\",\"releaseDate\":\"17-10-1997\",\"time\":321,\"type\":\"Comedy\",\"director\":\"Juliusz Machulski\",\"actorList\":[{\"id\":1,\"name\":\"Cezary Pazura\"},{\"id\":5,\"name\":\"Maciej Stuhr\"},{\"id\":8,\"name\":\"Edward Linde-Lubaszenko\"}],\"category\":\"HIT\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("actorList[*].name", Matchers.containsInAnyOrder("Cezary Pazura", "Maciej Stuhr", "Edward Linde-Lubaszenko")))

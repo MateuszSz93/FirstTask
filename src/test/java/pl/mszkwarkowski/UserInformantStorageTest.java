@@ -10,6 +10,7 @@ import pl.mszkwarkowski.movie.Movie;
 import pl.mszkwarkowski.movie.MovieCategory;
 import pl.mszkwarkowski.user.User;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -26,7 +27,7 @@ public class UserInformantStorageTest {
     }
 
     @Test
-    public void userTest(){
+    public void userTest() throws Exception{
         Actor actor = new Actor(1, "John Doe");
         Actor actor1 = new Actor(2, "Jane Doe");
         List<Actor> actors = new ArrayList<>();
@@ -51,16 +52,14 @@ public class UserInformantStorageTest {
         Assert.assertEquals(result.contains(movie), true);
 
         Movie movie2 = new Movie(3, "Third Title", "07-11-1994", 112, "Action", "Third director", actors, MovieCategory.OTHER);
-        List<Movie> movies1 = new ArrayList<>();
-        movies1.add(movie2);
+        BigDecimal payment = new BigDecimal("4.95");
+        BigDecimal paymentResult = null;
 
-        when(userInformantStorage.rentMovies(1, new int[]{3})).thenReturn(movies1);
-        result = userInformantStorage.rentMovies(1, new int[]{3});
+        when(userInformantStorage.rentMovies(1, new int[]{3})).thenReturn(payment);
+        paymentResult = userInformantStorage.rentMovies(1, new int[]{3});
 
         verify(userInformantStorage).rentMovies(1, new int[]{3});
         verify(userInformantStorage, times(1)).rentMovies(1, new int[]{3});
-
-        Assert.assertEquals(result.size(), 1);
-        Assert.assertEquals(result.contains(movie2), true);
+        Assert.assertEquals(result.contains(movie2), false);
     }
 }

@@ -5,8 +5,10 @@ import org.springframework.web.bind.annotation.*;
 import pl.mszkwarkowski.movie.Actor;
 import pl.mszkwarkowski.movie.Movie;
 import pl.mszkwarkowski.movie.MovieCategory;
+import pl.mszkwarkowski.other.Error;
 
 import java.util.*;
+
 
 @RestController
 @EnableAutoConfiguration
@@ -36,7 +38,7 @@ public class MoviesInformantController {
      * @param actor - Actor object, created from received JSON code.
      * @return Actor object.
      */
-    @PostMapping(value = "/newActor")
+    @PostMapping(value = "/actor")
     public Actor addActor(@RequestBody Actor actor) {
         if (moviesInformantStorage.getActor(actor.getId()) != null) {
             return null;
@@ -50,7 +52,7 @@ public class MoviesInformantController {
      *
      * @return movie object.
      */
-    @PostMapping(value = "/newMovie")
+    @PostMapping(value = "/movie")
     public Movie addMovie(@RequestBody Movie movie) {
         if (moviesInformantStorage.getMovie(movie.getId()) != null) {
             return null;
@@ -72,7 +74,7 @@ public class MoviesInformantController {
      * @param id of actor
      * @return list of Actor objects.
      */
-    @DeleteMapping(value = "/deleteActor/{id}")
+    @DeleteMapping(value = "/actor/{id}")
     public Collection deleteActor(@PathVariable int id) {
         if (moviesInformantStorage.getActor(id) != null) {
             moviesInformantStorage.deleteActor(id);
@@ -86,7 +88,7 @@ public class MoviesInformantController {
      * @param id of movie.
      * @return list of Movie objects.
      */
-    @DeleteMapping(value = "/deleteMovie/{id}")
+    @DeleteMapping(value = "/movie/{id}")
     public Collection deleteMovie(@PathVariable int id) {
         if (moviesInformantStorage.getMovie(id) != null) {
             moviesInformantStorage.deleteMovie(id);
@@ -115,7 +117,7 @@ public class MoviesInformantController {
      * @param actor - Actor object, created from received JSON code.
      * @return Actor object.
      */
-    @PutMapping(value = "/editActor/{id}")
+    @PutMapping(value = "/actor/{id}")
     public Actor editActor(@PathVariable int id, @RequestBody Actor actor) {
         if (moviesInformantStorage.getActor(id) == null || (id != actor.getId())) {
             return null;
@@ -131,7 +133,7 @@ public class MoviesInformantController {
      * @param movie - Movie object, created from received JSON code.
      * @return Movie object.
      */
-    @PutMapping(value = "editMovie/{id}")
+    @PutMapping(value = "movie/{id}")
     public Movie editMovie(@PathVariable int id, @RequestBody Movie movie) {
         if (moviesInformantStorage.getMovie(id) == null || (id != movie.getId())) {
             return null;

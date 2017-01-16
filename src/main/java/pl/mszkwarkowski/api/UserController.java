@@ -4,8 +4,10 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
 
 import pl.mszkwarkowski.movie.*;
+import pl.mszkwarkowski.other.Error;
 import pl.mszkwarkowski.user.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -19,7 +21,7 @@ public class UserController {
      * @param user - User object, created from received JSON code.
      * @return User object.
      */
-    @PostMapping(value = "/newUser")
+    @PostMapping(value = "/user")
     public User addUser(@RequestBody User user) {
         if (userInformantStorage.getUser(user.getId()) != null) {
             return null;
@@ -49,8 +51,11 @@ public class UserController {
      * @param moviesId
      * @return list of just rented movies.
      */
-    @PutMapping(value = "rentMovies/{userId}/{moviesId}")
-    public List<Movie> rentMovies(@PathVariable("userId") int userId, @PathVariable("moviesId") int[] moviesId) {
+    @PutMapping(value = "userMovies/{userId}/{moviesId}")
+    public BigDecimal rentMovies(@PathVariable("userId") int userId, @PathVariable("moviesId") int[] moviesId) throws Exception {
+        if (userInformantStorage.getUserMovies(userId).size() + moviesId.length > 10){
+            throw new Exception("User can not have more than 10 movies.");
+        }
         return userInformantStorage.rentMovies(userId, moviesId);
     }
 
@@ -61,9 +66,21 @@ public class UserController {
      * @param moviesId
      * @return list of user's movies.
      */
-    @DeleteMapping(value = "returnMovies/{userId}/{moviesId}")
+    @DeleteMapping(value = "userMovies/{userId}/{moviesId}")
     public List<Movie> returnMovies(@PathVariable("userId") int userId, @PathVariable("moviesId") int[] moviesId) {
         userInformantStorage.returnMovies(userId, moviesId);
         return userInformantStorage.getUserMovies(userId);
+    }
+
+    /**
+     * This method returns the exception message.
+     *
+     * @param ex Exception.
+     * @return Message contained in exception.
+     */
+    @ExceptionHandler(Exception.class)
+    public Error displayExceptionMessage(Exception ex) {
+        Error error = new Error(ex.getMessage());
+        return error;
     }
 }
