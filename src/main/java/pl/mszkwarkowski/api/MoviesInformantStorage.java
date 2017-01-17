@@ -65,7 +65,7 @@ public class MoviesInformantStorage {
     public void addActor(Actor actor) { ACTORS.put(actor.getId(), actor); }
 
     /**
-     * This method removes the actor from ACTORS and MOVIES_OF_ACTOR. It also delete the actor from all movies where he was playing.
+     * This method removes the actor.
      *
      * @param id of the actor.
      */
@@ -86,7 +86,7 @@ public class MoviesInformantStorage {
     }
 
     /**
-     * This method removes the movie from MOVIES. It also remove the movie from moviesList, which is value in MOVIES_OF_ACTOR.
+     * This method removes the movie.
      *
      * @param id of movie
      */
@@ -109,7 +109,7 @@ public class MoviesInformantStorage {
     }
 
     /**
-     * This method adds id of movie to moviesList, which is value in MOVIES_OF_ACTOR.
+     * This method adds id of movie to moviesList to connect the movie with the actor.
      *
      * @param actorId Id of the actor.
      * @param movieId Id of the movie.
@@ -164,7 +164,7 @@ public class MoviesInformantStorage {
     }
 
     /**
-     * This method takes this list of Actors which play in the movie. For each "Actor" object it checks if "Actor" with this id already exists. If not, it add him to Actors List. After that, it checks if given Actor object has the same name as Actor object with the same id on the list. If yes, it adds movie id and actor id to MOVIES_OF_ACTOR map.
+     * This method takes this list of actors which play in the movie. For each actor it checks if actor with this id already exists. If not, it creates new actor. After that, it checks if given actor has the same name as actor with the same id on the list. If yes, it connects the movie with the actor.
      *
      * @param actorList - List of Actor objects.
      * @param movieId
@@ -185,7 +185,7 @@ public class MoviesInformantStorage {
     }
 
     /**
-     * This method creates and returns list of Movies which have the same category.
+     * This method returns movies which have the same category.
      *
      * @param category of movies.
      * @return list of Movie objects.
@@ -201,7 +201,7 @@ public class MoviesInformantStorage {
     }
 
     /**
-     * This method creates and returns list of Movies which are available.
+     * This method returns available movies.
      *
      * @return list of Movie objects.
      */

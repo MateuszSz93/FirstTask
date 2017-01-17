@@ -30,7 +30,7 @@ public class UserInformantStorage {
     }
 
     /**
-     * This method adds new user to USERS HashMap and adds new ArrayList as value to LIST_OF_USER_MOVIES HashMap where the key is user's id.
+     * This method creates new user.
      *
      * @param user
      */
@@ -68,7 +68,7 @@ public class UserInformantStorage {
     }
 
     /**
-     * This method rent movies by user whose id is given as userId. It adds movies to movies list, which is value in LIST_OF_USER_MOVIES. It also count value which user has to pay, including discounts for four movies or for two movies which has "NEW" category.
+     * This method rents movies by user whose id is given as userId. It also count value which user has to pay, including discounts.
      *
      * @param userId
      * @param moviesId
@@ -112,7 +112,7 @@ public class UserInformantStorage {
     }
 
     /**
-     * This method remove movies from movies list, which is value in LIST_OF_USER_MOVIES and changes their availability to "true".
+     * This method returns movies by user whose id is given as userId.
      *
      * @param userId
      * @param moviesId

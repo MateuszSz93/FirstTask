@@ -21,19 +21,19 @@ public class MoviesInformantController {
     }
 
     /**
-     * @return collection of Movie's objects.
+     * @return all movies.
      */
     @GetMapping(value = "/movies")
     public Collection getMoviesData() { return moviesInformantStorage.getMovies(); }
 
     /**
-     * @return collection of Actor's objects.
+     * @return all actors.
      */
     @GetMapping(value = "/actors")
     public Collection getActorsData() { return moviesInformantStorage.getActors(); }
 
     /**
-     * This method creates new Actor object and add it to the HashMap. If actor with this id is already on the list, it will return null.
+     * This method creates new actor. If actor with this id is already on the list, it will return null.
      *
      * @param actor - Actor object, created from received JSON code.
      * @return Actor object.
@@ -48,7 +48,7 @@ public class MoviesInformantController {
     }
 
     /**
-     * This method creates new Movie object and add it to the HashMap. It also check if actors added to movie has existed earlier. In other case it checks if actor has unique id and if yes, it creates new Actor object and add him to ACTORS HashMap.
+     * This method creates new movie. It also check if actors added to movie has existed earlier. In other case it checks if actor has unique id and if yes, it creates new actor.
      *
      * @return movie object.
      */
@@ -111,7 +111,7 @@ public class MoviesInformantController {
     public Movie movieData(@PathVariable int id) { return moviesInformantStorage.getMovie(id); }
 
     /**
-     * This method edits values in Actor object which has given id.
+     * This method edits actor's values which has given id.
      *
      * @param id    of actor.
      * @param actor - Actor object, created from received JSON code.
@@ -127,7 +127,7 @@ public class MoviesInformantController {
     }
 
     /**
-     * This method edits values in Movie object which has given id. It also check if actors added to movie has existed earlier. In other case it checks if actor has unique id and if yes, it creates new Actor object and add him to ACTORS HashMap.
+     * This method edits movie's values which has given id. It also check if actors added to movie has existed earlier. In other case it checks if actor has unique id and if yes, it creates new actor.
      *
      * @param id    of movie.
      * @param movie - Movie object, created from received JSON code.

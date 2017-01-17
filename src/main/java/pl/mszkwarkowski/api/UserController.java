@@ -16,7 +16,7 @@ public class UserController {
     UserInformantStorage userInformantStorage = new UserInformantStorage();
 
     /**
-     * This method creates new User object and adds it to the HashMap. If user with this id is already on the list, it will return "null".
+     * This method creates new user. If user with this id is already on the list, it will return "null".
      *
      * @param user - User object, created from received JSON code.
      * @return User object.
@@ -45,7 +45,7 @@ public class UserController {
     public List<Movie> userMovies(@PathVariable int id) { return userInformantStorage.getUserMovies(id); }
 
     /**
-     * This method adds new movies to user's movie's list. If movies are not available or they do not exist, it will return empty collection.
+     * This method rents movies by user. If movies are not available or they do not exist, it will return empty collection.
      *
      * @param userId
      * @param moviesId
@@ -60,7 +60,7 @@ public class UserController {
     }
 
     /**
-     * This method removes movies from user's movie's list.
+     * This method removes movies by user.
      *
      * @param userId
      * @param moviesId
