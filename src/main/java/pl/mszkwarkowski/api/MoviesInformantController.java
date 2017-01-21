@@ -1,19 +1,20 @@
 package pl.mszkwarkowski.api;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.*;
 import org.springframework.web.bind.annotation.*;
-import pl.mszkwarkowski.movie.Actor;
-import pl.mszkwarkowski.movie.Movie;
-import pl.mszkwarkowski.movie.MovieCategory;
-import pl.mszkwarkowski.other.Error;
+import pl.mszkwarkowski.movie.*;
 
 import java.util.*;
-
 
 @RestController
 @EnableAutoConfiguration
 public class MoviesInformantController {
     private MoviesInformantStorage moviesInformantStorage = new MoviesInformantStorage();
+    @Autowired
+    private ActorRepository actorRepository;
+    @Autowired
+    private MovieRepository movieRepository;
 
     @RequestMapping("/")
     String home() {
@@ -24,13 +25,17 @@ public class MoviesInformantController {
      * @return all movies.
      */
     @GetMapping(value = "/movies")
-    public Collection getMoviesData() { return moviesInformantStorage.getMovies(); }
+    public List<Movie> getMoviesData() {
+        return (List<Movie>) movieRepository.findAll();
+    }
 
     /**
      * @return all actors.
      */
     @GetMapping(value = "/actors")
-    public Collection getActorsData() { return moviesInformantStorage.getActors(); }
+    public List<Actor> getActorsData() {
+        return (List<Actor>) actorRepository.findAll();
+    }
 
     /**
      * This method creates new actor. If actor with this id is already on the list, it will return null.
@@ -40,11 +45,15 @@ public class MoviesInformantController {
      */
     @PostMapping(value = "/actor")
     public Actor addActor(@RequestBody Actor actor) {
-        if (moviesInformantStorage.getActor(actor.getId()) != null) {
+        return saveActor(actor);
+    }
+
+    public Actor saveActor(@RequestBody Actor actor) {
+        if (actorRepository.findOne(actor.getId()) != null) {
             return null;
         }
-        moviesInformantStorage.addActor(actor);
-        return moviesInformantStorage.getActor(actor.getId());
+        actorRepository.save(actor);
+        return actorRepository.findOne(actor.getId());
     }
 
     /**
@@ -54,18 +63,17 @@ public class MoviesInformantController {
      */
     @PostMapping(value = "/movie")
     public Movie addMovie(@RequestBody Movie movie) {
-        if (moviesInformantStorage.getMovie(movie.getId()) != null) {
+        if (movieRepository.findOne(movie.getId()) != null) {
             return null;
         }
-
-        List<Actor> actorsWithUniqueId = moviesInformantStorage.addActorToActorsList(movie.getActorList(), movie.getId());
+        List<Actor> actorsWithUniqueId = moviesInformantStorage.createUniqueActorsList(movie, actorRepository);
         movie.setActorList(actorsWithUniqueId);
         if (actorsWithUniqueId.isEmpty()) {
             return null;
         }
-        movie.setAvailable(true);
-        moviesInformantStorage.addMovie(movie);
-        return movie;
+        movie.setOwner(null);
+        movieRepository.save(movie);
+        return movieRepository.findOne(movie.getId());
     }
 
     /**
@@ -75,11 +83,11 @@ public class MoviesInformantController {
      * @return list of Actor objects.
      */
     @DeleteMapping(value = "/actor/{id}")
-    public Collection deleteActor(@PathVariable int id) {
-        if (moviesInformantStorage.getActor(id) != null) {
-            moviesInformantStorage.deleteActor(id);
+    public List<Actor> deleteActor(@PathVariable int id) {
+        if (actorRepository.findOne(id) != null) {
+            actorRepository.delete(id);
         }
-        return moviesInformantStorage.getActors();
+        return (List<Actor>) actorRepository.findAll();
     }
 
     /**
@@ -89,11 +97,11 @@ public class MoviesInformantController {
      * @return list of Movie objects.
      */
     @DeleteMapping(value = "/movie/{id}")
-    public Collection deleteMovie(@PathVariable int id) {
-        if (moviesInformantStorage.getMovie(id) != null) {
-            moviesInformantStorage.deleteMovie(id);
+    public List<Movie> deleteMovie(@PathVariable int id) {
+        if (movieRepository.findOne(id) != null) {
+            movieRepository.delete(id);
         }
-        return moviesInformantStorage.getMovies();
+        return (List<Movie>) movieRepository.findAll();
     }
 
     /**
@@ -101,14 +109,18 @@ public class MoviesInformantController {
      * @return Actor object.
      */
     @GetMapping(value = "/actor/{id}")
-    public Actor actorData(@PathVariable int id) { return moviesInformantStorage.getActor(id); }
+    public Actor actorData(@PathVariable int id) {
+        return actorRepository.findOne(id);
+    }
 
     /**
      * @param id of movie.
      * @return Movie object.
      */
     @GetMapping(value = "/movie/{id}")
-    public Movie movieData(@PathVariable int id) { return moviesInformantStorage.getMovie(id); }
+    public Movie movieData(@PathVariable int id) {
+        return movieRepository.findOne(id);
+    }
 
     /**
      * This method edits actor's values which has given id.
@@ -119,11 +131,11 @@ public class MoviesInformantController {
      */
     @PutMapping(value = "/actor/{id}")
     public Actor editActor(@PathVariable int id, @RequestBody Actor actor) {
-        if (moviesInformantStorage.getActor(id) == null || (id != actor.getId())) {
+        if (actorRepository.findOne(id) == null || (id != actor.getId())) {
             return null;
         }
-        moviesInformantStorage.editActor(id, actor);
-        return actor;
+        actorRepository.save(actor);
+        return actorRepository.findOne(actor.getId());
     }
 
     /**
@@ -135,17 +147,17 @@ public class MoviesInformantController {
      */
     @PutMapping(value = "movie/{id}")
     public Movie editMovie(@PathVariable int id, @RequestBody Movie movie) {
-        if (moviesInformantStorage.getMovie(id) == null || (id != movie.getId())) {
+        if (movieRepository.findOne(id) == null || (id != movie.getId())) {
             return null;
         }
-
-        List<Actor> actorsWithUniqueId = moviesInformantStorage.addActorToActorsList(movie.getActorList(), movie.getId());
+        List<Actor> actorsWithUniqueId = moviesInformantStorage.createUniqueActorsList(movie, actorRepository);
         movie.setActorList(actorsWithUniqueId);
         if (actorsWithUniqueId.isEmpty()) {
             return null;
         }
-        moviesInformantStorage.editMovie(id, movie);
-        return movie;
+        movie.setOwner(movieRepository.findOne(id).getOwner());
+        movieRepository.save(movie);
+        return movieRepository.findOne(movie.getId());
     }
 
     /**
@@ -153,11 +165,15 @@ public class MoviesInformantController {
      * @return list of Movie objects.
      */
     @GetMapping(value = "moviesByCategory/{category}")
-    public Collection getSameCategoryMovies(@PathVariable MovieCategory category) { return moviesInformantStorage.getMoviesByCategory(category); }
+    public List<Movie> getSameCategoryMovies(@PathVariable MovieCategory category) {
+        return movieRepository.findMoviesByCategory(category);
+    }
 
     /**
      * @return list of Movie objects.
      */
     @GetMapping(value = "availableMovies")
-    public Collection displayAvailableMovies() { return moviesInformantStorage.getAvailableMovies(); }
+    public List<Movie> displayAvailableMovies() {
+        return movieRepository.findMoviesByOwner(null);
+    }
 }

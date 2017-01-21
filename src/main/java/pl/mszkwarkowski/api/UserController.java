@@ -1,5 +1,6 @@
 package pl.mszkwarkowski.api;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,10 @@ import java.util.List;
 @EnableAutoConfiguration
 public class UserController {
     UserInformantStorage userInformantStorage = new UserInformantStorage();
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    MovieRepository movieRepository;
 
     /**
      * This method creates new user. If user with this id is already on the list, it will return "null".
@@ -23,11 +28,13 @@ public class UserController {
      */
     @PostMapping(value = "/user")
     public User addUser(@RequestBody User user) {
-        if (userInformantStorage.getUser(user.getId()) != null) {
+        if (userRepository.findOne(user.getId()) != null) {
             return null;
         }
-        userInformantStorage.addUser(user);
-        return userInformantStorage.getUser(user.getId());
+        user.setDebt(new BigDecimal("0"));
+        userRepository.save(user);
+        return userRepository.findOne(user.getId());
+
     }
 
     /**
@@ -35,14 +42,18 @@ public class UserController {
      * @return User object.
      */
     @GetMapping(value = "/user/{id}")
-    public User userData(@PathVariable int id) { return userInformantStorage.getUser(id); }
+    public User userData(@PathVariable int id) {
+        return userRepository.findOne(id);
+    }
 
     /**
      * @param id of the user.
      * @return list of movies rented by user with given id.
      */
     @GetMapping(value = "/userMovies/{id}")
-    public List<Movie> userMovies(@PathVariable int id) { return userInformantStorage.getUserMovies(id); }
+    public List<Movie> userMovies(@PathVariable int id) {
+        return movieRepository.findMoviesByOwner(id);
+    }
 
     /**
      * This method rents movies by user. If movies are not available or they do not exist, it will return empty collection.
@@ -53,10 +64,13 @@ public class UserController {
      */
     @PutMapping(value = "userMovies/{userId}/{moviesId}")
     public BigDecimal rentMovies(@PathVariable("userId") int userId, @PathVariable("moviesId") int[] moviesId) throws Exception {
-        if (userInformantStorage.getUserMovies(userId).size() + moviesId.length > 10){
+        if (userRepository.findOne(userId) == null) {
+            return null;
+        }
+        if (((List<Movie>) movieRepository.findMoviesByOwner(userId)).size() + moviesId.length > 10) {
             throw new Exception("User can not have more than 10 movies.");
         }
-        return userInformantStorage.rentMovies(userId, moviesId);
+        return userInformantStorage.rentMovies(userId, moviesId, userRepository, movieRepository);
     }
 
     /**
@@ -68,8 +82,8 @@ public class UserController {
      */
     @DeleteMapping(value = "userMovies/{userId}/{moviesId}")
     public List<Movie> returnMovies(@PathVariable("userId") int userId, @PathVariable("moviesId") int[] moviesId) {
-        userInformantStorage.returnMovies(userId, moviesId);
-        return userInformantStorage.getUserMovies(userId);
+        userInformantStorage.returnMovie(moviesId, movieRepository, userId);
+        return movieRepository.findMoviesByOwner(userId);
     }
 
     /**

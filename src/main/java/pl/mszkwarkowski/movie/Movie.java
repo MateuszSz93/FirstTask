@@ -1,33 +1,43 @@
 package pl.mszkwarkowski.movie;
 
+import javax.persistence.*;
 import java.util.List;
 
 /**
  * The "Movie" class represents a movie object. It has various attributes of movies.
  */
+@Entity
 public class Movie {
+    @Id
+    @Column
     private int id;
     private String title;
     private String releaseDate;
-    private int time;
+    private int duration;
     private String type;
     private String director;
+    private Integer owner;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(name="movie_actor",
+            joinColumns=@JoinColumn(name="movie_id"),
+            inverseJoinColumns=@JoinColumn(name="actor_id"))
     private List<Actor> actorList;
-    private boolean available;
+    @Enumerated(EnumType.STRING)
     private MovieCategory category;
 
     public Movie() {}
 
-    public Movie(int id, String title, String releaseDate, int time, String type, String director, List<Actor> actorList, MovieCategory category) {
+    public Movie(int id, String title, String releaseDate, int duration, String type, String director, List<Actor> actorList, MovieCategory category) {
         this.id = id;
         this.title = title;
         this.releaseDate = releaseDate;
-        this.time = time;
+        this.duration = duration;
         this.type = type;
         this.director = director;
         this.actorList = actorList;
-        this.available = true;
         this.category = category;
+        this.owner = null;
     }
 
     public int getId() { return id; }
@@ -42,9 +52,9 @@ public class Movie {
 
     public void setReleaseDate(String releaseDate) { this.releaseDate = releaseDate; }
 
-    public int getTime() { return time; }
+    public int getDuration() { return duration; }
 
-    public void setTime(int time) { this.time = time; }
+    public void setDuration(int duration) { this.duration = duration; }
 
     public String getType() { return type; }
 
@@ -58,11 +68,15 @@ public class Movie {
 
     public void setActorList(List<Actor> actorList) { this.actorList = actorList; }
 
-    public boolean isAvailable() { return available; }
-
-    public void setAvailable(boolean available) { this.available = available; }
-
     public MovieCategory getCategory() { return category; }
 
     public void setCategory(MovieCategory category) { this.category = category; }
+
+    public Integer getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Integer owner) {
+        this.owner = owner;
+    }
 }

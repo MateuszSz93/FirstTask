@@ -1,11 +1,14 @@
 package pl.mszkwarkowski.user;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 /**
  * The "User" class represents an user object. It has various attributes of users.
  */
+@Entity
 public class User {
+    @Id
     private int id;
     private String name;
     private BigDecimal debt;

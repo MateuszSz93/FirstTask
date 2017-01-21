@@ -2,6 +2,7 @@ package pl.mszkwarkowski.api;
 
 import pl.mszkwarkowski.movie.Movie;
 import pl.mszkwarkowski.movie.MovieCategory;
+import pl.mszkwarkowski.movie.MovieRepository;
 import pl.mszkwarkowski.user.*;
 
 import java.math.*;
@@ -12,117 +13,56 @@ import java.util.*;
  */
 public class UserInformantStorage {
     /**
-     * Map, where the key is id of user and value is User object with the given id.
-     */
-    private static final Map<Integer, User> USERS = new HashMap<>();
-
-    /**
-     * Map, where the key is id of user and value is list of movies rented by this user.
-     */
-    private static final Map<Integer, List<Integer>> LIST_OF_USER_MOVIES = new HashMap<>();
-
-    /**
-     * @param id of the user.
-     * @return User object.
-     */
-    public User getUser(int id) {
-        return USERS.get(id);
-    }
-
-    /**
-     * This method creates new user.
-     *
-     * @param user
-     */
-    public void addUser(User user) {
-        user.setDebt(new BigDecimal(0));
-        LIST_OF_USER_MOVIES.put(user.getId(), new ArrayList<>());
-        USERS.put(user.getId(), user);
-    }
-
-    /**
-     * This method returns all movies rented by user whose id is given as parameter.
-     *
-     * @param id of the user.
-     * @return list of movie objects.
-     */
-    public List<Movie> getUserMovies(int id) {
-        MoviesInformantStorage moviesInformantStorage = new MoviesInformantStorage();
-        List<Movie> userMovies = new ArrayList<>();
-        for (int movieId : LIST_OF_USER_MOVIES.get(id)) {
-            userMovies.add(moviesInformantStorage.getMovie(movieId));
-        }
-        return userMovies;
-    }
-
-    /**
-     * @param movieId
-     */
-    public void removeMovieFromUsersList(int movieId) {
-        for (List<Integer> i : LIST_OF_USER_MOVIES.values()) {
-            if (i.contains(movieId)) {
-                i.remove(Integer.valueOf(movieId));
-                break;
-            }
-        }
-    }
-
-    /**
      * This method rents movies by user whose id is given as userId. It also count value which user has to pay, including discounts.
      *
      * @param userId
      * @param moviesId
      * @return list of movies objects.
      */
-    public BigDecimal rentMovies(int userId, int[] moviesId) {
-        MoviesInformantStorage moviesInformantStorage = new MoviesInformantStorage();
+    public BigDecimal rentMovies(int userId, int[] moviesId, UserRepository userRepository, MovieRepository movieRepository) {
         List<Movie> availableMoviesList = new ArrayList<>();
-        List<Movie> acceptedMovies = new ArrayList<>();
+        boolean otherMovie = false;
         int newMoviesAmount = 0;
         BigDecimal payment = new BigDecimal("0");
-        boolean otherMovie = false;
-        int moviesLeftFourDiscount = 7;
+        User user = userRepository.findOne(userId);
 
         for (int i : moviesId) {
-            if ((moviesInformantStorage.getMovie(i) != null) && (moviesInformantStorage.getMovie(i).isAvailable())) {
-                availableMoviesList.add(moviesInformantStorage.getMovie(i));
+            if ((movieRepository.findOne(i) != null) && (movieRepository.findOne(i).getOwner() == null)) {
+                availableMoviesList.add(movieRepository.findOne(i));
             }
         }
-
         for (Movie movie : availableMoviesList) {
-            if (LIST_OF_USER_MOVIES.get(userId).size() != 10) {
-                if (availableMoviesList.size() >= 4 && movie.getCategory() == MovieCategory.OTHER && !otherMovie && LIST_OF_USER_MOVIES.get(userId).size() != moviesLeftFourDiscount++) {
-                    otherMovie = true;
-                } else if (movie.getCategory() == MovieCategory.NEW) {
-                    newMoviesAmount++;
-                    payment = payment.add(movie.getCategory().value());
-                } else {
-                    payment = payment.add(movie.getCategory().value());
-                }
-                LIST_OF_USER_MOVIES.get(userId).add(movie.getId());
-                movie.setAvailable(false);
-                acceptedMovies.add(movie);
+            if (availableMoviesList.size() >= 4 && movie.getCategory() == MovieCategory.OTHER && !otherMovie) {
+                otherMovie = true;
+            } else if (movie.getCategory() == MovieCategory.NEW) {
+                newMoviesAmount++;
+                payment = payment.add(movie.getCategory().value());
+            } else {
+                payment = payment.add(movie.getCategory().value());
             }
+            movie.setOwner(userId);
+            movieRepository.save(movie);
         }
         if (newMoviesAmount >= 2) {
             payment = payment.multiply(new BigDecimal(0.75));
         }
-        getUser(userId).setDebt(getUser(userId).getDebt().add(payment).setScale(2, RoundingMode.CEILING));
+
+        user.setDebt(user.getDebt().add(payment).setScale(2, RoundingMode.CEILING));
+        userRepository.save(user);
         return payment.setScale(2, RoundingMode.CEILING);
     }
 
     /**
      * This method returns movies by user whose id is given as userId.
      *
-     * @param userId
      * @param moviesId
      */
-    public void returnMovies(int userId, int[] moviesId) {
-        MoviesInformantStorage moviesInformantStorage = new MoviesInformantStorage();
+    public void returnMovie(int[] moviesId, MovieRepository movieRepository, int userId) {
         for (int id : moviesId) {
-            if (moviesInformantStorage.getMovie(id) != null) {
-                moviesInformantStorage.getMovie(id).setAvailable(true);
-                LIST_OF_USER_MOVIES.get(userId).remove(Integer.valueOf(id));
+            Movie movie = movieRepository.findOne(id);
+            if (movie.getOwner() == userId) {
+                movie.setOwner(null);
+                movieRepository.save(movie);
             }
         }
     }

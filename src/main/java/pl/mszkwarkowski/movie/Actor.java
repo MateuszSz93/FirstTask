@@ -1,10 +1,16 @@
 package pl.mszkwarkowski.movie;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 /**
  * The "Actor" class represents an actor object. It has various attributes of actors.
  */
+@Entity
 public class Actor {
-    private int id;
+
+    @Id
+    private Integer id;
     private String name;
 
     public Actor(){
