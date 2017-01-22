@@ -4,12 +4,16 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import pl.mszkwarkowski.api.*;
 import pl.mszkwarkowski.movie.*;
 
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
@@ -17,13 +21,13 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = MoviesInformant.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class MoviesInformantControllerTest {
+public class MoviesInformantControllerTest extends Mockito {
     @Autowired
     MoviesInformantController moviesInformantController;
 
     @Test
     public void t00GetMoviesData() throws Exception {
-        List<Movie> movieList = moviesInformantController.getMoviesData();
+        List<Movie> movieList = moviesInformantController.getMoviesData().getBody();
         assertEquals(30, movieList.size());
         assertEquals(1, movieList.get(0).getId());
         assertEquals("Kiler", movieList.get(0).getTitle());
