@@ -26,7 +26,7 @@ public class UserController {
      * @param user - User object, created from received JSON code.
      * @return User object.
      */
-    @PostMapping(value = "/user")
+    @PostMapping(value = "/user", produces = {"application/json"}, consumes = {"application/json"})
     public User addUser(@RequestBody User user) {
         if (userRepository.findOne(user.getId()) != null) {
             return null;
@@ -41,7 +41,7 @@ public class UserController {
      * @param id of the user.
      * @return User object.
      */
-    @GetMapping(value = "/user/{id}")
+    @GetMapping(value = "/user/{id}", produces = {"application/json"})
     public User userData(@PathVariable int id) {
         return userRepository.findOne(id);
     }
@@ -50,7 +50,7 @@ public class UserController {
      * @param id of the user.
      * @return list of movies rented by user with given id.
      */
-    @GetMapping(value = "/userMovies/{id}")
+    @GetMapping(value = "/userMovies/{id}", produces = {"application/json"})
     public List<Movie> userMovies(@PathVariable int id) {
         return movieRepository.findMoviesByOwner(id);
     }
@@ -62,7 +62,7 @@ public class UserController {
      * @param moviesId
      * @return list of just rented movies.
      */
-    @PutMapping(value = "userMovies/{userId}/{moviesId}")
+    @PutMapping(value = "userMovies/{userId}/{moviesId}", produces = {"application/json"}, consumes = {"application/json"})
     public BigDecimal rentMovies(@PathVariable("userId") int userId, @PathVariable("moviesId") int[] moviesId) throws Exception {
         if (userRepository.findOne(userId) == null) {
             return null;
@@ -80,7 +80,7 @@ public class UserController {
      * @param moviesId
      * @return list of user's movies.
      */
-    @DeleteMapping(value = "userMovies/{userId}/{moviesId}")
+    @DeleteMapping(value = "userMovies/{userId}/{moviesId}", produces = {"application/json"})
     public List<Movie> returnMovies(@PathVariable("userId") int userId, @PathVariable("moviesId") int[] moviesId) {
         userInformantStorage.returnMovie(moviesId, movieRepository, userId);
         return movieRepository.findMoviesByOwner(userId);
