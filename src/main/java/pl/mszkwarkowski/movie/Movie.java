@@ -1,6 +1,10 @@
 package pl.mszkwarkowski.movie;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import pl.mszkwarkowski.user.User;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -9,22 +13,31 @@ import java.util.List;
 @Entity
 public class Movie {
     @Id
-    @Column
+    @NotNull
     private int id;
+    @NotNull
     private String title;
+    @NotNull
     private String releaseDate;
+    @NotNull
     private int duration;
+    @NotNull
     private String type;
+    @NotNull
     private String director;
-    private Integer owner;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinTable(name="movie_actor",
-            joinColumns=@JoinColumn(name="movie_id"),
-            inverseJoinColumns=@JoinColumn(name="actor_id"))
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "movie_actor", joinColumns = @JoinColumn(name = "movie_id"), inverseJoinColumns = @JoinColumn(name = "actor_id"))
     private List<Actor> actorList;
+
     @Enumerated(EnumType.STRING)
+    @NotNull
     private MovieCategory category;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="owner")
+    @JsonBackReference
+    private User owner;
 
     public Movie() {}
 
@@ -72,11 +85,12 @@ public class Movie {
 
     public void setCategory(MovieCategory category) { this.category = category; }
 
-    public Integer getOwner() {
+
+    public User getOwner() {
         return owner;
     }
 
-    public void setOwner(Integer owner) {
+    public void setOwner(User owner) {
         this.owner = owner;
     }
 }

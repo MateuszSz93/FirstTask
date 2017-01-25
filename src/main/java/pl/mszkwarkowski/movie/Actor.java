@@ -1,17 +1,22 @@
 package pl.mszkwarkowski.movie;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * The "Actor" class represents an actor object. It has various attributes of actors.
  */
 @Entity
 public class Actor {
-
     @Id
-    private Integer id;
+    @NotNull
+    private int id;
+    @NotNull
     private String name;
+
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "actorList")
+    private List<Movie> movieList;
 
     public Actor(){
     }
@@ -35,5 +40,12 @@ public class Actor {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @PreRemove
+    private void removeActor() {
+        for (Movie movie : movieList) {
+            movie.getActorList().remove(this);
+        }
     }
 }

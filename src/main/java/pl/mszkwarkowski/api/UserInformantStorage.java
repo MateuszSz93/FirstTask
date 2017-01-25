@@ -40,7 +40,7 @@ public class UserInformantStorage {
             } else {
                 payment = payment.add(movie.getCategory().value());
             }
-            movie.setOwner(userId);
+            movie.setOwner(userRepository.findOne(userId));
             movieRepository.save(movie);
         }
         if (newMoviesAmount >= 2) {
@@ -60,7 +60,7 @@ public class UserInformantStorage {
     public void returnMovie(int[] moviesId, MovieRepository movieRepository, int userId) {
         for (int id : moviesId) {
             Movie movie = movieRepository.findOne(id);
-            if (movie.getOwner() == userId) {
+            if (movie.getOwner().getId() == userId) {
                 movie.setOwner(null);
                 movieRepository.save(movie);
             }

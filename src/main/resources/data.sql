@@ -1,9 +1,9 @@
 DROP ALL OBJECTS;
 
-CREATE TABLE actor(id INT PRIMARY KEY, name VARCHAR(255));
-CREATE TABLE movie(id INT PRIMARY KEY, title VARCHAR(255), release_date VARCHAR(255), duration INT, type VARCHAR(255), director VARCHAR(255), category VARCHAR(255), owner INT);
-CREATE TABLE movie_actor(movie_id INT NOT NULL, actor_id INT NOT NULL);
-CREATE TABLE user(id INT PRIMARY KEY, name VARCHAR(255), debt DECIMAL);
+CREATE TABLE actor(id INTEGER NOT NULL PRIMARY KEY, name VARCHAR(255));
+CREATE TABLE movie(id INTEGER NOT NULL PRIMARY KEY, title VARCHAR(255), release_date VARCHAR(255), duration INTEGER, type VARCHAR(255), director VARCHAR(255), category VARCHAR(255), owner INTEGER);
+CREATE TABLE movie_actor(movie_id INTEGER NOT NULL, actor_id INTEGER NOT NULL);
+CREATE TABLE user(id INTEGER NOT NULL PRIMARY KEY, name VARCHAR(255), debt DECIMAL);
 
 
 INSERT INTO actor(id, name) VALUES (1, 'Cezary Pazura');

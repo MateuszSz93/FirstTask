@@ -13,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @EnableAutoConfiguration
 public class MoviesInformantController {
-    private MoviesInformantStorage moviesInformantStorage = new MoviesInformantStorage();
     @Autowired
     private ActorRepository actorRepository;
     @Autowired
@@ -27,7 +26,7 @@ public class MoviesInformantController {
     /**
      * @return all movies.
      */
-    @GetMapping(value = "/movies", produces={"application/json","application/xml"})
+    @GetMapping(value = "/movies", produces = {"application/json", "application/xml"})
     public ResponseEntity<List<Movie>> getMoviesData() {
         List<Movie> movieList = (List<Movie>) movieRepository.findAll();
         return ResponseEntity.ok().cacheControl(CacheControl.maxAge(300, TimeUnit.SECONDS)).body(movieList);
@@ -47,12 +46,8 @@ public class MoviesInformantController {
      * @param actor - Actor object, created from received JSON code.
      * @return Actor object.
      */
-    @PostMapping(value = "/actor", produces = {"application/json"}, consumes = {"application/json"})
+    @PostMapping(value = "/actors", produces = {"application/json"}, consumes = {"application/json"})
     public Actor addActor(@RequestBody Actor actor) {
-        return saveActor(actor);
-    }
-
-    public Actor saveActor(@RequestBody Actor actor) {
         if (actorRepository.findOne(actor.getId()) != null) {
             return null;
         }
@@ -65,14 +60,12 @@ public class MoviesInformantController {
      *
      * @return movie object.
      */
-    @PostMapping(value = "/movie", produces = {"application/json"}, consumes = {"application/json"})
+    @PostMapping(value = "/movies", produces = {"application/json"}, consumes = {"application/json"})
     public Movie addMovie(@RequestBody Movie movie) {
         if (movieRepository.findOne(movie.getId()) != null) {
             return null;
         }
-        List<Actor> actorsWithUniqueId = moviesInformantStorage.createUniqueActorsList(movie, actorRepository);
-        movie.setActorList(actorsWithUniqueId);
-        if (actorsWithUniqueId.isEmpty()) {
+        if (movie.getActorList().isEmpty()) {
             return null;
         }
         movie.setOwner(null);
@@ -86,7 +79,7 @@ public class MoviesInformantController {
      * @param id of actor
      * @return list of Actor objects.
      */
-    @DeleteMapping(value = "/actor/{id}", produces = {"application/json"})
+    @DeleteMapping(value = "/actors/{id}", produces = {"application/json"})
     public List<Actor> deleteActor(@PathVariable int id) {
         if (actorRepository.findOne(id) != null) {
             actorRepository.delete(id);
@@ -100,7 +93,7 @@ public class MoviesInformantController {
      * @param id of movie.
      * @return list of Movie objects.
      */
-    @DeleteMapping(value = "/movie/{id}", produces = {"application/json"})
+    @DeleteMapping(value = "/movies/{id}", produces = {"application/json"})
     public List<Movie> deleteMovie(@PathVariable int id) {
         if (movieRepository.findOne(id) != null) {
             movieRepository.delete(id);
@@ -112,7 +105,7 @@ public class MoviesInformantController {
      * @param id of actor.
      * @return Actor object.
      */
-    @GetMapping(value = "/actor/{id}", produces = {"application/json"})
+    @GetMapping(value = "/actors/{id}", produces = {"application/json"})
     public Actor actorData(@PathVariable int id) {
         return actorRepository.findOne(id);
     }
@@ -121,7 +114,7 @@ public class MoviesInformantController {
      * @param id of movie.
      * @return Movie object.
      */
-    @GetMapping(value = "/movie/{id}", produces = {"application/json"})
+    @GetMapping(value = "/movies/{id}", produces = {"application/json"})
     public Movie movieData(@PathVariable int id) {
         return movieRepository.findOne(id);
     }
@@ -133,7 +126,7 @@ public class MoviesInformantController {
      * @param actor - Actor object, created from received JSON code.
      * @return Actor object.
      */
-    @PutMapping(value = "/actor/{id}", produces = {"application/json"}, consumes = {"application/json"})
+    @PutMapping(value = "/actors/{id}", produces = {"application/json"}, consumes = {"application/json"})
     public Actor editActor(@PathVariable int id, @RequestBody Actor actor) {
         if (actorRepository.findOne(id) == null || (id != actor.getId())) {
             return null;
@@ -149,14 +142,12 @@ public class MoviesInformantController {
      * @param movie - Movie object, created from received JSON code.
      * @return Movie object.
      */
-    @PutMapping(value = "movie/{id}", produces = {"application/json"}, consumes = {"application/json"})
+    @PutMapping(value = "movies/{id}", produces = {"application/json"}, consumes = {"application/json"})
     public Movie editMovie(@PathVariable int id, @RequestBody Movie movie) {
         if (movieRepository.findOne(id) == null || (id != movie.getId())) {
             return null;
         }
-        List<Actor> actorsWithUniqueId = moviesInformantStorage.createUniqueActorsList(movie, actorRepository);
-        movie.setActorList(actorsWithUniqueId);
-        if (actorsWithUniqueId.isEmpty()) {
+        if (movie.getActorList().isEmpty()) {
             return null;
         }
         movie.setOwner(movieRepository.findOne(id).getOwner());
@@ -168,8 +159,8 @@ public class MoviesInformantController {
      * @param category of movies.
      * @return list of Movie objects.
      */
-    @GetMapping(value = "moviesByCategory/{category}", produces = {"application/json"})
-    public List<Movie> getSameCategoryMovies(@PathVariable MovieCategory category) {
+    @GetMapping(value = "movies", produces = {"application/json"}, params = "category")
+    public List<Movie> getSameCategoryMovies(@RequestParam(value = "category", required = true) MovieCategory category) {
         return movieRepository.findMoviesByCategory(category);
     }
 

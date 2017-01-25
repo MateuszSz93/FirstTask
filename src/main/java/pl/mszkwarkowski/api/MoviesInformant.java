@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
-@ComponentScan(basePackages = {"pl.mszkwarkowski.api","pl.mszkwarkowski.other", "pl.mszkwarkowski.user"})
+@ComponentScan(basePackages = {"pl.mszkwarkowski.api", "pl.mszkwarkowski.other", "pl.mszkwarkowski.user"})
 @EnableJpaRepositories({"pl.mszkwarkowski.other", "pl.mszkwarkowski.movie", "pl.mszkwarkowski.user"})
 @EntityScan({"pl.mszkwarkowski.other", "pl.mszkwarkowski.movie", "pl.mszkwarkowski.movie", "pl.mszkwarkowski.user"})
 @SpringBootApplication

@@ -1,7 +1,12 @@
 package pl.mszkwarkowski.user;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import pl.mszkwarkowski.movie.Movie;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * The "User" class represents an user object. It has various attributes of users.
@@ -9,9 +14,15 @@ import java.math.BigDecimal;
 @Entity
 public class User {
     @Id
+    @NotNull
     private int id;
+    @NotNull
     private String name;
     private BigDecimal debt;
+
+    @OneToMany(mappedBy = "owner")
+    @JsonManagedReference
+    private List<Movie> moviesList;
 
     public User(){};
 
@@ -31,4 +42,8 @@ public class User {
     public BigDecimal getDebt() { return debt; }
 
     public void setDebt(BigDecimal debt) { this.debt = debt; }
+
+    public List<Movie> getMoviesList() { return moviesList; }
+
+    public void setMoviesList(List<Movie> moviesList) { this.moviesList = moviesList; }
 }

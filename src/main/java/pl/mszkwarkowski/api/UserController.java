@@ -34,7 +34,6 @@ public class UserController {
         user.setDebt(new BigDecimal("0"));
         userRepository.save(user);
         return userRepository.findOne(user.getId());
-
     }
 
     /**
@@ -52,7 +51,7 @@ public class UserController {
      */
     @GetMapping(value = "/userMovies/{id}", produces = {"application/json"})
     public List<Movie> userMovies(@PathVariable int id) {
-        return movieRepository.findMoviesByOwner(id);
+        return movieRepository.findMoviesByOwner(userRepository.getOne(id));
     }
 
     /**
@@ -67,7 +66,7 @@ public class UserController {
         if (userRepository.findOne(userId) == null) {
             return null;
         }
-        if (((List<Movie>) movieRepository.findMoviesByOwner(userId)).size() + moviesId.length > 10) {
+        if (((List<Movie>) movieRepository.findMoviesByOwner(userRepository.findOne(userId))).size() + moviesId.length > 10) {
             throw new Exception("User can not have more than 10 movies.");
         }
         return userInformantStorage.rentMovies(userId, moviesId, userRepository, movieRepository);
@@ -83,7 +82,7 @@ public class UserController {
     @DeleteMapping(value = "userMovies/{userId}/{moviesId}", produces = {"application/json"})
     public List<Movie> returnMovies(@PathVariable("userId") int userId, @PathVariable("moviesId") int[] moviesId) {
         userInformantStorage.returnMovie(moviesId, movieRepository, userId);
-        return movieRepository.findMoviesByOwner(userId);
+        return movieRepository.findMoviesByOwner(userRepository.getOne(userId));
     }
 
     /**
