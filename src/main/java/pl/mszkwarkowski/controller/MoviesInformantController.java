@@ -2,6 +2,9 @@ package pl.mszkwarkowski.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import pl.mszkwarkowski.model.*;
@@ -30,6 +33,12 @@ public class MoviesInformantController {
     public ResponseEntity<List<Movie>> getMoviesData() {
         List<Movie> movieList = (List<Movie>) movieRepository.findAll();
         return ResponseEntity.ok().cacheControl(CacheControl.maxAge(300, TimeUnit.SECONDS)).body(movieList);
+    }
+
+    @GetMapping(value = "/movies", produces = {"application/json", "application/xml"}, params = {"page", "limit"})
+    public ResponseEntity<Page<Movie>> getMoviesWithPagination(@RequestParam(value = "page", required = true) int page, @RequestParam(value = "limit", required = false, defaultValue = "5") int limit) {
+        PageRequest request = new PageRequest(page - 1, limit, Sort.Direction.ASC, "id");
+        return ResponseEntity.ok().cacheControl(CacheControl.maxAge(300, TimeUnit.SECONDS)).body(movieRepository.findAll(request));
     }
 
     /**
