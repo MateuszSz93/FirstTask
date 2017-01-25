@@ -1,7 +1,6 @@
-package pl.mszkwarkowski.movie;
+package pl.mszkwarkowski.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import pl.mszkwarkowski.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

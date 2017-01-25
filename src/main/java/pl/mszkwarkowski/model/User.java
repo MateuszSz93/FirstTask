@@ -1,7 +1,7 @@
-package pl.mszkwarkowski.user;
+package pl.mszkwarkowski.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import pl.mszkwarkowski.movie.Movie;
+import pl.mszkwarkowski.model.Movie;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

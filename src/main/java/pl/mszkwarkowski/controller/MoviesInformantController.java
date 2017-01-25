@@ -1,11 +1,15 @@
-package pl.mszkwarkowski.api;
+package pl.mszkwarkowski.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.*;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.mszkwarkowski.movie.*;
+import pl.mszkwarkowski.model.Actor;
+import pl.mszkwarkowski.model.Movie;
+import pl.mszkwarkowski.model.MovieCategory;
+import pl.mszkwarkowski.repository.ActorRepository;
+import pl.mszkwarkowski.repository.MovieRepository;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;

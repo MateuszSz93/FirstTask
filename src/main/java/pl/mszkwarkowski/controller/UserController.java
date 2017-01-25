@@ -1,12 +1,15 @@
-package pl.mszkwarkowski.api;
+package pl.mszkwarkowski.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
 
-import pl.mszkwarkowski.movie.*;
+import pl.mszkwarkowski.api.UserInformantStorage;
+import pl.mszkwarkowski.model.Movie;
+import pl.mszkwarkowski.model.User;
 import pl.mszkwarkowski.other.Error;
-import pl.mszkwarkowski.user.*;
+import pl.mszkwarkowski.repository.MovieRepository;
+import pl.mszkwarkowski.repository.UserRepository;
 
 import java.math.BigDecimal;
 import java.util.List;

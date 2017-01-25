@@ -1,4 +1,4 @@
-package pl.mszkwarkowski.movie;
+package pl.mszkwarkowski.model;
 
 import java.math.BigDecimal;
 

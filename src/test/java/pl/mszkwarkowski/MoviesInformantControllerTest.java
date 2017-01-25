@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import pl.mszkwarkowski.api.*;
-import pl.mszkwarkowski.movie.*;
+import pl.mszkwarkowski.controller.MoviesInformantController;
+import pl.mszkwarkowski.model.Actor;
+import pl.mszkwarkowski.model.Movie;
+import pl.mszkwarkowski.model.MovieCategory;
 
 import java.util.*;
 

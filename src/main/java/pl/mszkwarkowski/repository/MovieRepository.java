@@ -1,9 +1,11 @@
-package pl.mszkwarkowski.movie;
+package pl.mszkwarkowski.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import pl.mszkwarkowski.user.User;
+import pl.mszkwarkowski.model.Movie;
+import pl.mszkwarkowski.model.MovieCategory;
+import pl.mszkwarkowski.model.User;
 
 import java.util.List;
 

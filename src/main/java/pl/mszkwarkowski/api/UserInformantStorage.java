@@ -1,9 +1,10 @@
 package pl.mszkwarkowski.api;
 
-import pl.mszkwarkowski.movie.Movie;
-import pl.mszkwarkowski.movie.MovieCategory;
-import pl.mszkwarkowski.movie.MovieRepository;
-import pl.mszkwarkowski.user.*;
+import pl.mszkwarkowski.model.Movie;
+import pl.mszkwarkowski.model.MovieCategory;
+import pl.mszkwarkowski.model.User;
+import pl.mszkwarkowski.repository.MovieRepository;
+import pl.mszkwarkowski.repository.UserRepository;
 
 import java.math.*;
 import java.util.*;

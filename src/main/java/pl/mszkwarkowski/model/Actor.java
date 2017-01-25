@@ -1,4 +1,4 @@
-package pl.mszkwarkowski.movie;
+package pl.mszkwarkowski.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
