@@ -163,7 +163,7 @@ public class MoviesInformantControllerTest extends Mockito {
 
     @Test
     public void t11DisplayAvailableMovies() throws Exception {
-        List<Movie> movieList = moviesInformantController.displayAvailableMovies();
+        List<Movie> movieList = moviesInformantController.displayAvailableMovies(true);
         assertEquals(15, movieList.get(10).getId());
         assertEquals("Inglourious Basterds", movieList.get(10).getTitle());
         assertEquals(null, movieList.get(10).getOwner());

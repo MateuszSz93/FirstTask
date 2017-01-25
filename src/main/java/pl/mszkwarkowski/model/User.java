@@ -1,8 +1,6 @@
 package pl.mszkwarkowski.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import pl.mszkwarkowski.model.Movie;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;

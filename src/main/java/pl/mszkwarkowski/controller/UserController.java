@@ -5,11 +5,9 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
 
 import pl.mszkwarkowski.api.UserInformantStorage;
-import pl.mszkwarkowski.model.Movie;
-import pl.mszkwarkowski.model.User;
+import pl.mszkwarkowski.model.*;
 import pl.mszkwarkowski.other.Error;
-import pl.mszkwarkowski.repository.MovieRepository;
-import pl.mszkwarkowski.repository.UserRepository;
+import pl.mszkwarkowski.repository.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -43,8 +41,8 @@ public class UserController {
      * @param id of the user.
      * @return User object.
      */
-    @GetMapping(value = "/user/{id}", produces = {"application/json"})
-    public User userData(@PathVariable int id) {
+    @GetMapping(value = "/user", produces = {"application/json"}, params = "userId")
+    public User userData(@RequestParam(value = "userId", required = true) int id) {
         return userRepository.findOne(id);
     }
 
@@ -52,9 +50,9 @@ public class UserController {
      * @param id of the user.
      * @return list of movies rented by user with given id.
      */
-    @GetMapping(value = "/userMovies/{id}", produces = {"application/json"})
-    public List<Movie> userMovies(@PathVariable int id) {
-        return movieRepository.findMoviesByOwner(userRepository.getOne(id));
+    @GetMapping(value = "/user", produces = {"application/json"}, params = "id")
+    public List<Movie> userMovies(@RequestParam(value = "id", required = true) int id) {
+        return movieRepository.findByOwner(userRepository.getOne(id));
     }
 
     /**
@@ -64,12 +62,12 @@ public class UserController {
      * @param moviesId
      * @return list of just rented movies.
      */
-    @PutMapping(value = "userMovies/{userId}/{moviesId}", produces = {"application/json"}, consumes = {"application/json"})
-    public BigDecimal rentMovies(@PathVariable("userId") int userId, @PathVariable("moviesId") int[] moviesId) throws Exception {
+    @PutMapping(value = "/user", produces = {"application/json"}, consumes = {"application/json"}, params = {"userId", "moviesId"})
+    public BigDecimal rentMovies(@RequestParam(value = "userId", required = true) int userId, @RequestParam(value = "moviesId", required = true) int[] moviesId) throws Exception {
         if (userRepository.findOne(userId) == null) {
             return null;
         }
-        if (((List<Movie>) movieRepository.findMoviesByOwner(userRepository.findOne(userId))).size() + moviesId.length > 10) {
+        if (((List<Movie>) movieRepository.findByOwner(userRepository.findOne(userId))).size() + moviesId.length > 10) {
             throw new Exception("User can not have more than 10 movies.");
         }
         return userInformantStorage.rentMovies(userId, moviesId, userRepository, movieRepository);
@@ -82,10 +80,10 @@ public class UserController {
      * @param moviesId
      * @return list of user's movies.
      */
-    @DeleteMapping(value = "userMovies/{userId}/{moviesId}", produces = {"application/json"})
-    public List<Movie> returnMovies(@PathVariable("userId") int userId, @PathVariable("moviesId") int[] moviesId) {
+    @DeleteMapping(value = "/user", produces = {"application/json"}, params = {"userId", "moviesId"})
+    public List<Movie> returnMovies(@RequestParam(value = "userId", required = true) int userId, @RequestParam(value = "moviesId", required = true) int[] moviesId) {
         userInformantStorage.returnMovie(moviesId, movieRepository, userId);
-        return movieRepository.findMoviesByOwner(userRepository.getOne(userId));
+        return movieRepository.findByOwner(userRepository.getOne(userId));
     }
 
     /**

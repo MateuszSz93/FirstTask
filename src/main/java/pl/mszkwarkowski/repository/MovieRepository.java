@@ -3,9 +3,7 @@ package pl.mszkwarkowski.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import pl.mszkwarkowski.model.Movie;
-import pl.mszkwarkowski.model.MovieCategory;
-import pl.mszkwarkowski.model.User;
+import pl.mszkwarkowski.model.*;
 
 import java.util.List;
 
@@ -14,6 +12,8 @@ import java.util.List;
  */
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Integer> {
-    List<Movie> findMoviesByCategory(@Param("category") MovieCategory category);
-    List<Movie> findMoviesByOwner(@Param("owner") User owner);
+    List<Movie> findByCategory(MovieCategory category);
+    List<Movie> findByOwner(User owner);
+    List<Movie> findByOwnerIsNull();
+    List<Movie> findByOwnerIsNotNull();
 }
