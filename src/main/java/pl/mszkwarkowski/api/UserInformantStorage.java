@@ -6,6 +6,7 @@ import pl.mszkwarkowski.model.User;
 import pl.mszkwarkowski.repository.MovieRepository;
 import pl.mszkwarkowski.repository.UserRepository;
 
+import javax.ws.rs.BadRequestException;
 import java.math.*;
 import java.util.*;
 
@@ -58,12 +59,14 @@ public class UserInformantStorage {
      *
      * @param moviesId
      */
-    public void returnMovie(int[] moviesId, MovieRepository movieRepository, int userId) {
+    public void returnMovie(int[] moviesId, MovieRepository movieRepository, int userId) throws Exception {
         for (int id : moviesId) {
             Movie movie = movieRepository.findOne(id);
             if (movie.getOwner().getId() == userId) {
                 movie.setOwner(null);
                 movieRepository.save(movie);
+            } else {
+                throw new Exception("Movie do not belong to user.");
             }
         }
     }

@@ -4,17 +4,38 @@ package pl.mszkwarkowski.other;
  * Display exception message as object.
  */
 public class Error {
-    private String errorMessage;
+    private Integer status;
+    private String error;
+    private String message;
 
-    public Error(String errorMessage){
-        this.errorMessage = errorMessage;
+    public Error(Integer status, String error, String message){
+        this.status = status;
+        this.error = error;
+        this.message = message;
     }
 
-    public String getErrorMessage() {
-        return errorMessage;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
 }
