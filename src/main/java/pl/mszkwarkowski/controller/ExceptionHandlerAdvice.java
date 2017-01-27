@@ -1,7 +1,6 @@
 package pl.mszkwarkowski.controller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.web.bind.annotation.*;
 import pl.mszkwarkowski.other.Error;
@@ -19,10 +18,10 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler({JpaObjectRetrievalFailureException.class, NotFoundException.class, ForbiddenException.class, BadRequestException.class})
     public ResponseEntity<Error> displayExceptionData(Exception ex) {
         HttpStatus status = HttpStatus.NOT_FOUND;
-        if (ex.getClass() == BadRequestException.class){
+        if (ex.getClass() == BadRequestException.class) {
             status = HttpStatus.BAD_REQUEST;
         }
-        if (ex.getClass() == ForbiddenException.class){
+        if (ex.getClass() == ForbiddenException.class) {
             status = HttpStatus.FORBIDDEN;
         }
         Error error = new Error(status.value(), status.getReasonPhrase(), ex.getMessage());

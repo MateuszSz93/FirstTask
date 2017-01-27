@@ -1,14 +1,14 @@
 package pl.mszkwarkowski.other;
 
 /**
- * Display exception message as object.
+ * Represent exception message as object.
  */
 public class Error {
     private Integer status;
     private String error;
     private String message;
 
-    public Error(Integer status, String error, String message){
+    public Error(Integer status, String error, String message) {
         this.status = status;
         this.error = error;
         this.message = message;

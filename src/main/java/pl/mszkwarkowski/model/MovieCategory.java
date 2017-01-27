@@ -13,7 +13,7 @@ public enum MovieCategory {
         this.value = value;
     }
 
-    public BigDecimal value(){
+    public BigDecimal value() {
         return value;
     }
 }

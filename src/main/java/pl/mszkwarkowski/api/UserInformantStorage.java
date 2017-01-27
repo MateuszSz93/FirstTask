@@ -6,12 +6,11 @@ import pl.mszkwarkowski.model.User;
 import pl.mszkwarkowski.repository.MovieRepository;
 import pl.mszkwarkowski.repository.UserRepository;
 
-import javax.ws.rs.BadRequestException;
 import java.math.*;
 import java.util.*;
 
 /**
- * This class manages the users and user's movies collections.
+ * This class manages the user and his movies.
  */
 public class UserInformantStorage {
     /**
@@ -19,6 +18,8 @@ public class UserInformantStorage {
      *
      * @param userId
      * @param moviesId
+     * @param userRepository
+     * @param movieRepository
      * @return list of movies objects.
      */
     public BigDecimal rentMovies(int userId, int[] moviesId, UserRepository userRepository, MovieRepository movieRepository) {
@@ -55,18 +56,18 @@ public class UserInformantStorage {
     }
 
     /**
-     * This method returns movies by user whose id is given as userId.
+     * This method returns movies to rental by user whose id is given as userId.
      *
      * @param moviesId
+     * @param movieRepository
+     * @param userId
      */
-    public void returnMovie(int[] moviesId, MovieRepository movieRepository, int userId) throws Exception {
+    public void returnMovie(int[] moviesId, MovieRepository movieRepository, int userId) {
         for (int id : moviesId) {
             Movie movie = movieRepository.findOne(id);
             if (movie.getOwner().getId() == userId) {
                 movie.setOwner(null);
                 movieRepository.save(movie);
-            } else {
-                throw new Exception("Movie do not belong to user.");
             }
         }
     }

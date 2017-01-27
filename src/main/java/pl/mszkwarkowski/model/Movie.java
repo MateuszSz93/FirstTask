@@ -13,13 +13,13 @@ import java.util.List;
 public class Movie {
     @Id
     @NotNull
-    private int id;
+    private Integer id;
     @NotNull
     private String title;
     @NotNull
     private String releaseDate;
     @NotNull
-    private int duration;
+    private Integer duration;
     @NotNull
     private String type;
     @NotNull
@@ -34,13 +34,13 @@ public class Movie {
     private MovieCategory category;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="owner")
+    @JoinColumn(name = "owner")
     @JsonBackReference
     private User owner;
 
     public Movie() {}
 
-    public Movie(int id, String title, String releaseDate, int duration, String type, String director, List<Actor> actorList, MovieCategory category) {
+    public Movie(Integer id, String title, String releaseDate, Integer duration, String type, String director, List<Actor> actorList, MovieCategory category) {
         this.id = id;
         this.title = title;
         this.releaseDate = releaseDate;
@@ -52,9 +52,9 @@ public class Movie {
         this.owner = null;
     }
 
-    public int getId() { return id; }
+    public Integer getId() { return id; }
 
-    public void setId(int id) { this.id = id; }
+    public void setId(Integer id) { this.id = id; }
 
     public String getTitle() { return title; }
 
@@ -64,9 +64,9 @@ public class Movie {
 
     public void setReleaseDate(String releaseDate) { this.releaseDate = releaseDate; }
 
-    public int getDuration() { return duration; }
+    public Integer getDuration() { return duration; }
 
-    public void setDuration(int duration) { this.duration = duration; }
+    public void setDuration(Integer duration) { this.duration = duration; }
 
     public String getType() { return type; }
 
@@ -84,12 +84,7 @@ public class Movie {
 
     public void setCategory(MovieCategory category) { this.category = category; }
 
+    public User getOwner() { return owner; }
 
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
+    public void setOwner(User owner) { this.owner = owner; }
 }

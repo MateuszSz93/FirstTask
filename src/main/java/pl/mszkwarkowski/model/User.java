@@ -1,6 +1,7 @@
 package pl.mszkwarkowski.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -13,7 +14,7 @@ import java.util.List;
 public class User {
     @Id
     @NotNull
-    private int id;
+    private Integer id;
     @NotNull
     private String name;
     private BigDecimal debt;
@@ -22,16 +23,16 @@ public class User {
     @JsonManagedReference
     private List<Movie> moviesList;
 
-    public User(){};
+    public User() {}
 
-    public User(int id, String name){
+    public User(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public int getId() { return id; }
+    public Integer getId() { return id; }
 
-    public void setId(int id) { this.id = id; }
+    public void setId(Integer id) { this.id = id; }
 
     public String getName() { return name; }
 

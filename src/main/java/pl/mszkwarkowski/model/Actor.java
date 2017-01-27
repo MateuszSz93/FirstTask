@@ -11,7 +11,7 @@ import java.util.List;
 public class Actor {
     @Id
     @NotNull
-    private int id;
+    private Integer id;
     @NotNull
     private String name;
 
@@ -21,7 +21,7 @@ public class Actor {
     public Actor(){
     }
 
-    public Actor(int id, String name){
+    public Actor(Integer id, String name){
         this.id = id;
         this.name = name;
     }
@@ -34,11 +34,11 @@ public class Actor {
         this.name = name;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
