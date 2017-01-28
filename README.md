@@ -31,6 +31,10 @@ After that, you have to run "MoviesInformat", you can do it for example by press
 
 ![Starting application.](http://i.imgur.com/b3puGCI.png)
 
+Or you can use this command in terminal:
+
+	mvn package && java -jar target/FirstTask-0.0.1-SNAPSHOT.jar
+
 ###Display actors/movies list:
 To display actors list you have to write this adress: 
 
