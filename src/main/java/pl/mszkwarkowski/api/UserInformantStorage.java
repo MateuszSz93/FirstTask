@@ -14,6 +14,11 @@ import java.util.*;
  */
 public class UserInformantStorage {
     /**
+     * Amount in percent to pay after discount.
+     */
+    private static final BigDecimal AFTER_DISCOUNT = new BigDecimal(0.75);
+
+    /**
      * This method rents movies by user whose id is given as userId. It also count value which user has to pay, including discounts.
      *
      * @param userId
@@ -47,7 +52,7 @@ public class UserInformantStorage {
             movieRepository.save(movie);
         }
         if (newMoviesAmount >= 2) {
-            payment = payment.multiply(new BigDecimal(0.75));
+            payment = payment.multiply(AFTER_DISCOUNT);
         }
 
         user.setDebt(user.getDebt().add(payment).setScale(2, RoundingMode.CEILING));

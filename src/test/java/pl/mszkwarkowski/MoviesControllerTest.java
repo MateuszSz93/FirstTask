@@ -8,7 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import pl.mszkwarkowski.api.*;
-import pl.mszkwarkowski.controller.MoviesInformantController;
+import pl.mszkwarkowski.controller.ActorsController;
+import pl.mszkwarkowski.controller.MoviesController;
 import pl.mszkwarkowski.model.*;
 
 import java.util.*;
@@ -18,13 +19,15 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = MoviesInformant.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class MoviesInformantControllerTest extends Mockito {
+public class MoviesControllerTest extends Mockito {
     @Autowired
-    MoviesInformantController moviesInformantController;
+    MoviesController moviesController;
+    @Autowired
+    ActorsController actorsController;
 
     @Test
     public void getMoviesDataTest() throws Exception {
-        List<Movie> movieList = moviesInformantController.getMoviesData().getBody();
+        List<Movie> movieList = moviesController.getMoviesData().getBody();
         assertEquals(30, movieList.size());
         assertEquals(new Integer(1), movieList.get(0).getId());
         assertEquals("Kiler", movieList.get(0).getTitle());
@@ -47,37 +50,9 @@ public class MoviesInformantControllerTest extends Mockito {
     }
 
     @Test
-    public void getActorsDataTest() throws Exception {
-        List<Actor> actorList = moviesInformantController.getActorsData();
-        assertEquals(68, actorList.size());
-        assertEquals(new Integer(1), actorList.get(0).getId());
-        assertEquals("Cezary Pazura", actorList.get(0).getName());
-        assertEquals(new Integer(13), actorList.get(12).getId());
-        assertEquals("Marlon Brando", actorList.get(12).getName());
-        assertEquals(new Integer(19), actorList.get(18).getId());
-        assertEquals("Joe Pesci", actorList.get(18).getName());
-        assertEquals(new Integer(28), actorList.get(27).getId());
-        assertEquals("Ben Kingsley", actorList.get(27).getName());
-        assertEquals(new Integer(33), actorList.get(32).getId());
-        assertEquals("Christian Bale", actorList.get(32).getName());
-        assertEquals(new Integer(39), actorList.get(38).getId());
-        assertEquals("Amy Smart", actorList.get(38).getName());
-        assertEquals(new Integer(61), actorList.get(60).getId());
-        assertEquals("Amy Adams", actorList.get(60).getName());
-    }
-
-    @Test
-    public void addActorTest() throws Exception {
-        Actor actor = moviesInformantController.addNewActor(new Actor(69, "Tadeusz Huk"));
-        assertEquals(new Integer(69), actor.getId());
-        assertEquals("Tadeusz Huk", actor.getName());
-        assertEquals(Actor.class, actor.getClass());
-    }
-
-    @Test
     public void addMovieTest() throws Exception {
-        List<Actor> actorList = Arrays.asList(moviesInformantController.actorData(1), moviesInformantController.actorData(2));
-        Movie movie = moviesInformantController.addNewMovie(new Movie(31, "Some Title", "18-12-2016", 100, "Action", "Some Director", actorList, MovieCategory.HIT));
+        List<Actor> actorList = Arrays.asList(actorsController.actorData(1), actorsController.actorData(2));
+        Movie movie = moviesController.addNewMovie(new Movie(31, "Some Title", "18-12-2016", 100, "Action", "Some Director", actorList, MovieCategory.HIT));
         assertEquals(new Integer(31), movie.getId());
         assertEquals("Some Title", movie.getTitle());
         assertEquals(MovieCategory.HIT, movie.getCategory());
@@ -87,16 +62,8 @@ public class MoviesInformantControllerTest extends Mockito {
     }
 
     @Test
-    public void actorDataTest() throws Exception {
-        Actor actor = moviesInformantController.actorData(1);
-        assertEquals(new Integer(1), actor.getId());
-        assertEquals("Cezary Pazura", actor.getName());
-        assertEquals(Actor.class, actor.getClass());
-    }
-
-    @Test
     public void movieDataTest() throws Exception {
-        Movie movie = moviesInformantController.movieData(2);
+        Movie movie = moviesController.movieData(2);
         assertEquals(new Integer(2), movie.getId());
         assertEquals("Poranek kojota", movie.getTitle());
         assertEquals("Olaf Lubaszenko", movie.getDirector());
@@ -104,42 +71,22 @@ public class MoviesInformantControllerTest extends Mockito {
     }
 
     @Test
-    public void deleteActorTest() throws Exception {
-        List<Actor> actorList = moviesInformantController.deleteActor(7);
-        assertEquals(new Integer(22), actorList.get(20).getId());
-        assertEquals("Jack Nicholson", actorList.get(20).getName());
-        assertEquals(67, actorList.size());
-
-        actorList = moviesInformantController.deleteActor(2);
-        assertEquals(new Integer(23), actorList.get(20).getId());
-        assertEquals("Mark Wahlberg", actorList.get(20).getName());
-        assertEquals(66, actorList.size());
-    }
-
-    @Test
     public void deleteMovieTest() throws Exception {
-        List<Movie> movieList = moviesInformantController.deleteMovie(2);
+        List<Movie> movieList = moviesController.deleteMovie(2);
         assertEquals(new Integer(24), movieList.get(22).getId());
         assertEquals("Doctor Strange", movieList.get(22).getTitle());
         assertEquals(29, movieList.size());
 
-        movieList = moviesInformantController.deleteMovie(3);
+        movieList = moviesController.deleteMovie(3);
         assertEquals(new Integer(25), movieList.get(22).getId());
         assertEquals("The Accountant", movieList.get(22).getTitle());
         assertEquals(28, movieList.size());
     }
 
     @Test
-    public void editActorTest() throws Exception {
-        Actor actor = moviesInformantController.editActor(1, new Actor(1, "Jason Statham"));
-        assertEquals(new Integer(1), actor.getId());
-        assertEquals("Jason Statham", actor.getName());
-    }
-
-    @Test
     public void editMovieTest() throws Exception {
-        List<Actor> actorList = Arrays.asList(moviesInformantController.actorData(1), moviesInformantController.actorData(5), moviesInformantController.actorData(8));
-        Movie movie = moviesInformantController.editMovie(1, new Movie(1, "Some New Title", "17-10-1997", 321, "Comedy", "Juliusz Machulski", actorList, MovieCategory.HIT));
+        List<Actor> actorList = Arrays.asList(actorsController.actorData(1), actorsController.actorData(5), actorsController.actorData(8));
+        Movie movie = moviesController.editMovie(1, new Movie(1, "Some New Title", "17-10-1997", 321, "Comedy", "Juliusz Machulski", actorList, MovieCategory.HIT));
         assertEquals(new Integer(1), movie.getId());
         assertEquals("Maciej Stuhr", movie.getActorList().get(1).getName());
         assertEquals("Some New Title", movie.getTitle());
@@ -148,7 +95,7 @@ public class MoviesInformantControllerTest extends Mockito {
 
     @Test
     public void getSameCategoryMoviesTest() throws Exception {
-        List<Movie> movieList = moviesInformantController.getSameCategoryMovies(MovieCategory.NEW);
+        List<Movie> movieList = moviesController.getSameCategoryMovies(MovieCategory.NEW);
         assertEquals(new Integer(21), movieList.get(0).getId());
         assertEquals("Inferno", movieList.get(0).getTitle());
         assertEquals(new Integer(25), movieList.get(4).getId());
@@ -160,7 +107,7 @@ public class MoviesInformantControllerTest extends Mockito {
 
     @Test
     public void displayAvailableMoviesTest() throws Exception {
-        List<Movie> movieList = moviesInformantController.displayAvailableMovies(true);
+        List<Movie> movieList = moviesController.displayAvailableMovies(true);
         assertEquals(new Integer(12), movieList.get(10).getId());
         assertEquals("Fight Club", movieList.get(10).getTitle());
         assertEquals(null, movieList.get(10).getOwner());

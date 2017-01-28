@@ -1,6 +1,9 @@
 package pl.mszkwarkowski.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -9,30 +12,49 @@ import java.util.List;
 /**
  * The "Movie" class represents a movie object. It has various attributes of movies.
  */
+@ApiModel
 @Entity
 public class Movie {
+    @ApiModelProperty(position = 1, required = true, notes = "Movie's id.")
     @Id
     @NotNull
     private Integer id;
+
+    @ApiModelProperty(position = 2, required = true, notes = "Movie's title.")
     @NotNull
+    @NotEmpty
     private String title;
+
+    @ApiModelProperty(position = 3, required = true, notes = "Movie's release date.")
     @NotNull
+    @NotEmpty
     private String releaseDate;
+
+    @ApiModelProperty(position = 4, required = true, notes = "Movie's duration time.")
     @NotNull
     private Integer duration;
+
+    @ApiModelProperty(position = 5, required = true, notes = "Movie's type.")
     @NotNull
+    @NotEmpty
     private String type;
+
+    @ApiModelProperty(position = 6, required = true, notes = "Movie's director.")
     @NotNull
+    @NotEmpty
     private String director;
 
+    @ApiModelProperty(position = 7, required = true, notes = "List of actors which play in the movie.")
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "movie_actor", joinColumns = @JoinColumn(name = "movie_id"), inverseJoinColumns = @JoinColumn(name = "actor_id"))
     private List<Actor> actorList;
 
+    @ApiModelProperty(position = 8, required = true, notes = "Movie's price category.")
     @Enumerated(EnumType.STRING)
     @NotNull
     private MovieCategory category;
 
+    @ApiModelProperty(position = 9, hidden = true, required = false, notes = "Movie's owner. Important during renting movies by user, ignored during creating new movie.")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner")
     @JsonBackReference

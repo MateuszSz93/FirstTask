@@ -54,7 +54,7 @@ Use example with result:
 	curl -H "Accept: application/xml" http://localhost:8080/movies
 	<List><item><id>1</id><title>Kiler</title><releaseDate>17-10-1997</releaseDate><duration>104</duration><type>Comedy</type><director>Juliusz Machulski</director><actorList><actorList><id>1</id><name>Cezary Pazura</name>...
 	
-You can also choose movies list paged. To do it you have to us this adress:
+You can also choose movies list paged. To do it you have to use this adress:
 
 > http://localhost:8080/movies?page={pageNumber}
 
