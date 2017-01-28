@@ -85,7 +85,7 @@ As 'available' you have to write 'true' if you want to get available movies. In 
 
 Use example with result:
 
-	http://localhost:8080/movies?available=true
+	curl http://localhost:8080/movies?available=true
 	[{"id":1,"title":"Kiler","releaseDate":"17-10-1997","duration":104,"type":"Comedy","director":"Juliusz Machulski","actorList":[{"id":1,"name":"Cezary Pazura"},{"id":3,"name":"Jerzy Stuhr"},{"id":4,"name":"Janusz Rewiński"}],"category":"HIT"}, ...
 
 To display movies by category, you have to use this URL:
