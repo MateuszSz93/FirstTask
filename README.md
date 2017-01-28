@@ -66,7 +66,7 @@ Or this adress if you want to set your own limit of movies per page:
 
 > http://localhost:8080/movies?page={pageNumber}&limit={moviesLimit}
 
-As pageNumber you have to write page which you want to display. And as moviesLimit, you have to write limit of movies per page. For example to display second page with movies limit set to 2, you have to use this URL: 
+As 'pageNumber' you have to write page which you want to display. And as 'moviesLimit', you have to write limit of movies per page. For example to display second page with movies limit set to 2, you have to use this URL: 
 
 > http://localhost:8080/movies?page=2&limit=2
 
@@ -75,6 +75,32 @@ Use example with result:
 	curl "http://localhost:8080/movies?page=2&limit=2"
 	{"content":[{"id":3,"title":"Chłopaki nie płaczą","releaseDate":"25-02-2000","duration":96,"type":"Comedy","director":"Olaf Lubaszenko","actorList":[{"id":5,"name":"Maciej Stuhr"},{"id":7,"name":"Michał Milowicz"},{"id":1,"name":"Cezary Pazura"}],"category":"HIT"},{"id":4, ...
 
+To display only available/disavailable movies, you have to use this adress:
+
+> http://localhost:8080/movies?available={available}
+
+As 'available' you have to write 'true' if you want to get available movies. In other case you have to write 'false'. To get available movies you have to use this URL:
+
+> http://localhost:8080/movies?available=true
+
+Use example with result:
+
+	http://localhost:8080/movies?available=true
+	[{"id":1,"title":"Kiler","releaseDate":"17-10-1997","duration":104,"type":"Comedy","director":"Juliusz Machulski","actorList":[{"id":1,"name":"Cezary Pazura"},{"id":3,"name":"Jerzy Stuhr"},{"id":4,"name":"Janusz Rewiński"}],"category":"HIT"}, ...
+
+To display movies by category, you have to use this URL:
+
+> http://localhost:8080/movies?category={category}
+
+As 'category' you have to write movie's category: NEW/HIT/OTHER. If you want to get 'NEW' movies you have to use this adress:
+
+> http://localhost:8080/movies?category=NEW
+
+Use example with result:
+
+	curl http://localhost:8080/movies?category=NEW
+	[{"id":21,"title":"Inferno","releaseDate":"12-10-2016","duration":121,"type":"Thriller","director":"Ron Howard","actorList":[{"id":44,"name":"Tom Hanks"},{"id":47,"name":"Omar Sy"},{"id":48,"name":"Felicity Jones"}],"category":"NEW"}, ...
+	
 ###Display actor/movie:
 To display simple actor you have to use this adress: 
 
